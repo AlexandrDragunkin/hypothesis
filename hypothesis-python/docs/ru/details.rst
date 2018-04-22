@@ -4,21 +4,19 @@
 
 В этой части рассмотрим менее распространенные особенности Hypothesis, которые вам не нужны для того что бы начинать его использовать, но, тем не менее, облегчат вашу жизнь.
 
-----------------------
-Additional test output
-----------------------
+---------------------------
+Дополнительный  test output
+---------------------------
 
-Normally the output of a failing test will look something like:
+Обычно результат неудачного теста выглядит примерно так:
 
 .. code::
 
     Falsifying example: test_a_thing(x=1, y="foo")
 
-With the ``repr`` of each keyword argument being printed.
+С ``repr`` каждого аргумента ключевого слова, который будет напечатан.
 
-Sometimes this isn't enough, either because you have values with a ``repr`` that
-isn't very descriptive or because you need to see the output of some
-intermediate steps of your test. That's where the ``note`` function comes in:
+Иногда этого недостаточно, потому что у вас есть значения с `` repr``, который не очень описателен или потому, что вам нужно увидеть результат некоторых промежуточных шагов вашего теста. Вот в чем заключается функция `` note``:
 
 .. doctest::
 
@@ -38,8 +36,7 @@ intermediate steps of your test. That's where the ``note`` function comes in:
     Shuffle: [1, 0]
     ls != ls2
 
-The note is printed in the final run of the test in order to include any
-additional information you might need in your test.
+Примечание печатается в последнем запуске теста, чтобы включить любую дополнительную информацию, которая может понадобиться в тесте.
 
 
 .. _statistics:
@@ -48,11 +45,11 @@ additional information you might need in your test.
 Test Statistics
 ---------------
 
-If you are using :pypi:`pytest` you can see a number of statistics about the executed tests
-by passing the command line argument ``--hypothesis-show-statistics``. This will include
-some general statistics about the test:
+Если вы используете :pypi:`pytest` вы можете увидеть ряд статистических данных о выполненных тестах
+передавая аргумент командной строки ``--hypothesis-show-statistics``. Что позволит включить
+некоторые общие статистические данные о тесте:
 
-For example if you ran the following with ``--hypothesis-show-statistics``:
+Например, если вы выполнили следующее с ``--hypothesis-show-statistics``:
 
 .. code-block:: python
 
@@ -63,7 +60,7 @@ For example if you ran the following with ``--hypothesis-show-statistics``:
       pass
 
 
-You would see:
+Вы увидите:
 
 .. code-block:: none
 
@@ -74,13 +71,9 @@ You would see:
     - Fraction of time spent in data generation: ~ 12%
     - Stopped because settings.max_examples=100
 
-The final "Stopped because" line is particularly important to note: It tells you the
-setting value that determined when the test should stop trying new examples. This
-can be useful for understanding the behaviour of your tests. Ideally you'd always want
-this to be :obj:`~hypothesis.settings.max_examples`.
+Заключительная строка" Stopped because " особенно важна для note: она сообщает вам значение настройки, которое определяет, когда тест должен прекратить пробовать новые примеры. Это может быть полезно для понимания поведения тестов. В идеале всегда хочется иметь :obj:`~hypothesis.settings.max_examples`.
 
-In some cases (such as filtered and recursive strategies) you will see events mentioned
-which describe some aspect of the data generation:
+В некоторых случаях (например, в фильтрах и рекурсивных стратегиях) вы увидите события, которые описывают некоторые аспекты генерации данных:
 
 .. code-block:: python
 
@@ -90,7 +83,7 @@ which describe some aspect of the data generation:
   def test_even_integers(i):
       pass
 
-You would see something like:
+Вы увидите что-то вроде:
 
 .. code-block:: none
 
@@ -104,7 +97,7 @@ You would see something like:
         * 80.88%, Retried draw from integers().filter(lambda x: <unknown>) to satisfy filter
         * 26.47%, Aborted test because unable to satisfy integers().filter(lambda x: <unknown>)
 
-You can also mark custom events in a test using the ``event`` function:
+Можно также отметить пользовательские события в тесте с помощью функции ``event``:
 
 .. autofunction:: hypothesis.event
 
@@ -117,7 +110,7 @@ You can also mark custom events in a test using the ``event`` function:
       event("i mod 3 = %d" % (i % 3,))
 
 
-You will then see output like:
+Тогда вы увидите результат:
 
 .. code-block:: none
 
@@ -134,8 +127,7 @@ You will then see output like:
       * 21.74%, i mod 3 = 1
       * 18.84%, i mod 3 = 2
 
-Arguments to ``event`` can be any hashable type, but two events will be considered the same
-if they are the same when converted to a string with :obj:`python:str`.
+Аргументы ``event`` могут быть любого типа, но два события будут считаться одинаковыми, если они совпадают при преобразовании в строку с :obj:`python:str`.
 
 ------------------
 Making assumptions
