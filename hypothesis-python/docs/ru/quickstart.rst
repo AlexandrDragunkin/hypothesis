@@ -100,13 +100,13 @@ Hypothesis правильно указывает на то, что этот ко
   def test_decode_inverts_encode(s):
       assert decode(encode(s)) == s
 
-You don't have to do this, but it can be useful both for clarity purposes and
-for reliably hitting hard to find examples. Also in local development
-Hypothesis will just remember and reuse the examples anyway, but there's not
-currently a very good workflow for sharing those in your CI.
+You don't have to do this, but it can be useful both for clarity purposes and for reliably hitting hard to find examples. Also in local development Hypothesis will just remember and reuse the examples anyway, but there's not currently a very good workflow for sharing those in your CI.
 
-It's also worth noting that both example and given support keyword arguments as
-well as positional. The following would have worked just as well:
+It's also worth noting that both example and given support keyword arguments as well as positional. The following would have worked just as well:
+
+Вам не нужно этого делать, но это может быть полезно как для ясности, так и для надежного поиска примеров. Также в рамках локального "обучения", в любом случае, Hypothesis будет помнить и повторно использовать примеры, но в настоящее время нет приемлемого хорошего рабочего процесса для обмена данными в вашей ситеме непрерывной интеграции (CI).
+
+Кроме того, стоит отметить, что оба примера и данной поддержки аргументов ключевого слова, а также позиционные. Следующее работало бы как раз также:
 
 .. code:: python
 
