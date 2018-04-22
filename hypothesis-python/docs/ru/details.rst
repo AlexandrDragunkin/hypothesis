@@ -133,12 +133,9 @@ Test Statistics
 Выполнение предположений
 ------------------------
 
-Sometimes Hypothesis doesn't give you exactly the right sort of data you want - it's
-mostly of the right shape, but some examples won't work and you don't want to care about
-them. You *can* just ignore these by aborting the test early, but this runs the risk of
-accidentally testing a lot less than you think you are. Also it would be nice to spend
-less time on bad examples - if you're running 100 examples per test (the default) and
-it turns out 70 of those examples don't match your needs, that's a lot of wasted time.
+Sometimes Hypothesis doesn't give you exactly the right sort of data you want - it's mostly of the right shape, but some examples won't work and you don't want to care about them. You *can* just ignore these by aborting the test early, but this runs the risk of  accidentally testing a lot less than you think you are. Also it would be nice to spend less time on bad examples - if you're running 100 examples per test (the default) and it turns out 70 of those examples don't match your needs, that's a lot of wasted time.
+
+Иногда Hypothesis не дает вам точно *те самые*, нужные вам данные - это в основном правильная форма, но некоторые примеры не будут работать, а вы не хотите заботиться о них. Вы *можете* просто игнорировать их, прервав тест раньше, но это риск случайно испытать намного меньше, чем вы думаете. Также было бы неплохо потратить меньше времени на плохие примеры - если вы используете 100 примеров на тест (по умолчанию), и получается, что 70 из этих примеров не соответствуют вашим потребностям, это очень много времени.
 
 .. autofunction:: hypothesis.assume
 
