@@ -10,13 +10,10 @@ hypothesis.
 ----------
 
 Предположим, мы написали `run length encoding
-<https://en.wikipedia.org/wiki/Run-length_encoding>`_ систему, и хотим проверить
-это её.
+<https://en.wikipedia.org/wiki/Run-length_encoding>`_ систему, и хотим проверить, что она умеет.
 
-We have the following code which I took straight from the
-`Rosetta Code <http://rosettacode.org/wiki/Run-length_encoding>`_ wiki (OK, I
-removed some commented out code and fixed the formatting, but there are no
-functional modifications):
+У нас есть следующий код, который я взял прямо из `Rosetta Code <http://rosettacode.org/wiki/Run-length_encoding>`_ wiki (ОК, я
+удалил какой-то прокомментированный код и исправил форматирование, но не модифицировал функции):
 
 
 .. code:: python
@@ -47,14 +44,15 @@ functional modifications):
       return q
 
 
-We want to write a test for this that will check some invariant of these
-functions.
+Мы хотим написать тест для этой пары функций, который проверит некоторый инвариант из их должностных обязанностей.
 
 The invariant one tends to try when you've got this sort of encoding /
 decoding is that if you encode something and then decode it then you get the same
 value back.
 
-Lets see how you'd do that with Hypothesis:
+Инвариант, когда у вас есть такого рода encoding / decoding заключается в том, что если вы кодируете что-то, а затем декодируете его, вы получаете то же самое значение назад.  
+
+Давайте посмотрим, как это можно сделаетье с помощью Hypothesis:
 
 
 .. code:: python
@@ -66,17 +64,13 @@ Lets see how you'd do that with Hypothesis:
   def test_decode_inverts_encode(s):
       assert decode(encode(s)) == s
 
-(For this example we'll just let pytest discover and run the test. We'll cover
-other ways you could have run it later).
+(Для этого примера мы просто позволим pytest обнаружить и запустить тест. Мы расскажем о
+других способах, которыми вы могли бы запустить его, позже).
 
-The text function returns what Hypothesis calls a search strategy. An object
-with methods that describe how to generate and simplify certain kinds of
-values. The :func:`@given <hypothesis.given>` decorator then takes our test
-function and turns it into a
-parametrized one which, when called, will run the test function over a wide
-range of matching data from that strategy.
+Функция text возвращает то, что Hypothesis называет стратегией поиска. Объект с методами которые описывают как произвести и упростить некоторые виды значений. :func:`@given <hypothesis.given>` декоратор затем берет наш тест функции и превращает его в
+параметризованный, который при вызове будет выполнять тестовую функцию по широкому диапазону совпадающих данных из этой стратегии.
 
-Anyway, this test immediately finds a bug in the code:
+Во всяком случае, этот тест сразу находит ошибку в коде:
 
 .. code::
 
