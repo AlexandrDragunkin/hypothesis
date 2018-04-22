@@ -10,7 +10,7 @@
 Нормальный модульный тест - это что-то вроде следующего:
 
 1. Подготовте некоторые данные.
-2. Выполнените некоторыеоперации с данными.
+2. Выполнените некоторые операции с данными.
 3. Подтвердите результат.
 
 Hypothesis позволяет писать тесты, которые выглядят следующим образом:
@@ -35,16 +35,7 @@ Hypothesis позволяет писать тесты, которые выгля
 * При удалении объекта он больше не отображается.
 * Если вы сериализуете и затем десериализуете значение, вы получите то же значение обратно.
 
-Now you know the basics of what Hypothesis does, the rest of this
-documentation will take you through how and why. It's divided into a
-number of sections, which you can see in the sidebar (or the
-menu at the top if you're on mobile), but you probably want to begin with
-the :doc:`Quick start guide <quickstart>`, which will give you a worked
-example of how to use Hypothesis and a detailed outline
-of the things you need to know to begin testing your code with it, or
-check out some of the
-`introductory articles <http://hypothesis.works/articles/intro/>`_.
-
+но вы, вероятно, хотите начать с: doc:`Краткого руководства по началу работы <quickstart>`, которое даст вам работющие примеры использования hypothesis и подробный план того, что вам нужно знать, чтобы начать тестирование кода с ним, или проверьте некоторые из `introductory articles <http://hypothesis.works/articles/intro/>`_.
 
 .. toctree::
   :maxdepth: 1
