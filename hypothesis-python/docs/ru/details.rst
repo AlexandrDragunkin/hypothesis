@@ -1,10 +1,8 @@
-=============================
-Details and advanced features
-=============================
+===============================
+Детали и дополнительные функции
+===============================
 
-This is an account of slightly less common Hypothesis features that you don't need
-to get started but will nevertheless make your life easier.
-
+В этой части рассмотрим менее распространенные особенности Hypothesis, которые вам не нужны для того что бы начинать его использовать, но, тем не менее, облегчат вашу жизнь.
 
 ----------------------
 Additional test output
