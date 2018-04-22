@@ -7,11 +7,11 @@
 
 Алгоритм его работы, позволяя вам писать тесты, которые утверждают, что что-то должно быть истинным для каждого случая, а не только то, о чём вы догадались подумать.
 
-Think of a normal unit test as being something like the following:
+Нормальный модульный тест - это что-то вроде следующего:
 
-1. Set up some data.
-2. Perform some operations on the data.
-3. Assert something about the result.
+1. Настройте некоторые данные.
+2. Выполните некоторые операции с данными.
+3. Подтвердите результат.
 
 Hypothesis lets you write tests which instead look like this:
 
