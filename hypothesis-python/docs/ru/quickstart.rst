@@ -74,12 +74,14 @@ hypothesis.
 
   UnboundLocalError: local variable 'character' referenced before assignment
 
-Hypothesis correctly points out that this code is simply wrong if called on
-an empty string.
+*Прим*: Локальная переменная 'character', упоминается до присвоения
 
-If we fix that by just adding the following code to the beginning of the function
-then Hypothesis tells us the code is correct (by doing nothing as you'd expect
-a passing test to).
+Hypothesis правильно указывает на то, что этот код просто неправильный, если он вызван
+для пустой строки.
+
+Если мы исправим это, просто добавив следующий код в начало функции
+тогда Hypothesis скажет нам, что код правильный (ничего не делая, как вы ожидали
+проходя тест).
 
 .. code:: python
 
@@ -87,8 +89,8 @@ a passing test to).
     if not input_string:
         return []
 
-If we wanted to make sure this example was always checked we could add it in
-explicitly:
+Если бы мы хотели убедиться, что этот пример всегда будет проверяться, мы могли бы добавить его
+явно:
 
 .. code:: python
 
