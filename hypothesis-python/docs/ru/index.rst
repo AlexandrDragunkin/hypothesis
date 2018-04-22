@@ -22,21 +22,18 @@ Hypothesis позволяет писать тесты, которые выгля
 Это часто называют property based testing, и было популяризировано в библиотеке Haskell `Quickcheck <https://hackage.haskell.org/package/QuickCheck>`_.
 
 
-It works by generating random data matching your specification and checking
-that your guarantee still holds in that case. If it finds an example where it doesn't,
-it takes that example and cuts it down to size, simplifying it until it finds a
-much smaller example that still causes the problem. It then saves that example
-for later, so that once it has found a problem with your code it will not forget
-it in the future.
+Он работает путем генерации случайных данных, соответствующих вашей спецификации и проверки
+что ваша функция или метод все еще держится и не падает в этом случае. Если он найдет пример, где это не так,
+он примет этот пример и сократит его размер, упрощая его, пока не найдет
+гораздо меньший пример, который все еще вызывает проблему. Затем он сохранит этот пример
+для последующего, так что как только он нашел проблему с вашим кодом он не забудет
+этого в будущем.
 
-Writing tests of this form usually consists of deciding on guarantees that
-your code should make - properties that should always hold true,
-regardless of what the world throws at you. Examples of such guarantees
-might be:
+Написание тестов в такой форме обычно состоит из решения о гарантиях, по которым ваш код должен делать make - properties, которые должны всегда иметь значение true, независимо от того, что мир преподнесет вам. Примерами таких гарантий могут быть:
 
-* Your code shouldn't throw an exception, or should only throw a particular type of exception (this works particularly well if you have a lot of internal assertions).
-* If you delete an object, it is no longer visible.
-* If you serialize and then deserialize a value, then you get the same value back.
+* Ваш код не должен генерировать исключение или должен вызывать только особый тип исключения (это работает особенно хорошо, если у вас много внутренних assert-ов).
+* При удалении объекта он больше не отображается.
+* Если вы сериализуете и затем десериализуете значение, вы получите то же значение обратно.
 
 Now you know the basics of what Hypothesis does, the rest of this
 documentation will take you through how and why. It's divided into a
