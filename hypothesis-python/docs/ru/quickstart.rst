@@ -211,16 +211,17 @@ Hypothesis является :pypi:`available on pypi as "hypothesis" <hypothesis
 
 Примечание: это работает, потому что Hypothesis игнорирует любые аргументы, которые ему не было сказано предоставить (позиционные аргументы начинаются справа), поэтому аргумент self для теста просто игнорируется и работает как обычно. Это также означает, что Hypothesis будет хорошо играть с другими способами параметризации тестов. Например, он отлично работает, если вы используете приспособления pytest для некоторых аргументов и Hypothesis для других.
 
--------------
-Writing tests
--------------
+----------------
+Написание тестов
+----------------
 
-A test in Hypothesis consists of two parts: A function that looks like a normal
-test in your test framework of choice but with some additional arguments, and
-a :func:`@given <hypothesis.given>` decorator that specifies
-how to provide those arguments.
+A test in Hypothesis consists of two parts: A function that looks like a normal test in your test framework of choice but with some additional arguments, and a :func:`@given <hypothesis.given>` decorator that specifies how to provide those arguments.
 
 Here are some other examples of how you could use that:
+
+Тест в Hypothesis состоит из двух частей: функции, которая выглядит как обычный тест в выбранной тестовой структуре, но с некоторыми дополнительными аргументами, и декоратора :func:`@given <hypothesis.given>`, который указывает, как предоставить эти аргументы.
+
+Вот некоторые другие примеры того, как можно это использовать:
 
 
 .. code:: python
@@ -254,31 +255,20 @@ Here are some other examples of how you could use that:
         assert isinstance(t[1], str)
 
 
-Note that as we saw in the above example you can pass arguments to :func:`@given <hypothesis.given>`
-either as positional or as keywords.
+Обратите внимание, что, как мы видели в приведенном выше примере, вы можете передать аргументы :func:`@given <hypothesis.given>` как позиционные или именованные.
 
 --------------
-Where to start
+С чего начать
 --------------
 
-You should now know enough of the basics to write some tests for your code
-using Hypothesis. The best way to learn is by doing, so go have a try.
+Теперь вы знаете достаточно об основах, чтобы написать какие то тесты для вашего кода с помощью Hypothesis. Лучший способ учиться - это сделать, так что попробуйте.
 
-If you're stuck for ideas for how to use this sort of test for your code, here
-are some good starting points:
+Если у вас туговато с идеями о том, как использовать этот вид теста для вашего кода, вот несколько подсказок:
 
-1. Try just calling functions with appropriate random data and see if they
-   crash. You may be surprised how often this works. e.g. note that the first
-   bug we found in the encoding example didn't even get as far as our
-   assertion: It crashed because it couldn't handle the data we gave it, not
-   because it did the wrong thing.
-2. Look for duplication in your tests. Are there any cases where you're testing
-   the same thing with multiple different examples? Can you generalise that to
-   a single test using Hypothesis?
-3. `This piece is designed for an F# implementation
-   <https://fsharpforfunandprofit.com/posts/property-based-testing-2/>`_, but
-   is still very good advice which you may find helps give you good ideas for
-   using Hypothesis.
+1. Попробуйте просто вызвать функции с соответствующими случайными данными и получите в них сбой. Вы возможно будете удивлены, как часто это работает. Например, обратите внимание, что первая ошибка, которую мы обнаружили в примере кодирования, даже не дошла до нашего утверждения: она потерпела крах, потому что она не смогла обработать данные, которые мы дали, а не потому, что произошло что то не правильное.
+2. Поищите дублирование в своих тестах. Есть ли случаи, когда вы тестируете одно и то же с несколькими разными примерами? Можете ли вы обобщить это в один тест, используя Hypothesis?
+3. `Эта часть предназначена для реализации на F#
+   <https://fsharpforfunandprofit.com/posts/property-based-testing-2/>`_, но по-прежнему очень полезна для помощи в поиске хороших идеи для использования Hypothesis.
 
-If you have any trouble getting started, don't feel shy about
+Если у вас возникли проблемы с запуском, не стесняйтесь и обращайтесь
 :doc:`asking for help <community>`.
