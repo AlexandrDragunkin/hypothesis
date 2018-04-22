@@ -9,15 +9,15 @@
 
 Нормальный модульный тест - это что-то вроде следующего:
 
-1. Подготовка некоторых данных.
-2. Выполнение некоторых операций с данными.
-3. Подтверждение результата.
+1. Подготовте некоторые данные.
+2. Выполнените некоторыеоперации с данными.
+3. Подтверждите результат.
 
-Hypothesis lets you write tests which instead look like this:
+Hypothesis позволяет писать тесты, которые выглядят следующим образом:
 
-1. For all data matching some specification.
-2. Perform some operations on the data.
-3. Assert something about the result.
+1. Для всех данных, соответствующих некоторым спецификациям.
+2. Выполните некоторые операции с данными.
+3. Сообщите что-то о результате.
 
 This is often called property based testing, and was popularised by the
 Haskell library `Quickcheck <https://hackage.haskell.org/package/QuickCheck>`_.
