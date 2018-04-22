@@ -129,9 +129,9 @@ Test Statistics
 
 Аргументы ``event`` могут быть любого типа, но два события будут считаться одинаковыми, если они совпадают при преобразовании в строку с :obj:`python:str`.
 
-------------------
-Making assumptions
-------------------
+------------------------
+Выполнение предположений
+------------------------
 
 Sometimes Hypothesis doesn't give you exactly the right sort of data you want - it's
 mostly of the right shape, but some examples won't work and you don't want to care about
