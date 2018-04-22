@@ -46,10 +46,6 @@ hypothesis.
 
 Мы хотим написать тест для этой пары функций, который проверит некоторый инвариант из их должностных обязанностей.
 
-The invariant one tends to try when you've got this sort of encoding /
-decoding is that if you encode something and then decode it then you get the same
-value back.
-
 Инвариант, когда у вас есть такого рода encoding / decoding заключается в том, что если вы кодируете что-то, а затем декодируете его, вы получаете то же самое значение назад.  
 
 Давайте посмотрим, как это можно сделаетье с помощью Hypothesis:
