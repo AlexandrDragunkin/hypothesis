@@ -2,13 +2,10 @@
 Добро пожаловать в Hypothesis!
 ==============================
 
-`Hypothesis <http://hypothesis.works>`_ is a Python library for
-creating unit tests which are simpler to write and more powerful when run,
-finding edge cases in your code you wouldn't have thought to look for. It is
-stable, powerful and easy to add to any existing test suite.
+`Hypothesis <http://hypothesis.works>`_ 
+представляет собой библиотеку Python для создания модульных тестов, которые попроще писать и более эффективны при запуске, обнаруживая граничные случаи в коде, который вы бы не подумали искать. Он стабильный, мощный и легко добавляется в любой существующий набор тестов.
 
-It works by letting you write tests that assert that something should be true
-for every case, not just the ones you happen to think of.
+Алгоритм его работы, позволяя вам писать тесты, которые утверждают, что что-то должно быть истинным для каждого случая, а не только того, о чём вы догадались подумать.
 
 Think of a normal unit test as being something like the following:
 
