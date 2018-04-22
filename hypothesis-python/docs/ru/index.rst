@@ -17,10 +17,10 @@ Hypothesis позволяет писать тесты, которые выгля
 
 1. Для всех данных, соответствующих некоторым спецификациям.
 2. Выполните некоторые операции с данными.
-3. Сообщите что-то о результате.
+3. Подтвердите результат.
 
-This is often called property based testing, and was popularised by the
-Haskell library `Quickcheck <https://hackage.haskell.org/package/QuickCheck>`_.
+Это часто называют property based testing, и было популяризировано в библиотеке Haskell `Quickcheck <https://hackage.haskell.org/package/QuickCheck>`_.
+
 
 It works by generating random data matching your specification and checking
 that your guarantee still holds in that case. If it finds an example where it doesn't,
