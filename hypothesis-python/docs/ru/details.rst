@@ -133,13 +133,11 @@ Test Statistics
 Выполнение предположений
 ------------------------
 
-Sometimes Hypothesis doesn't give you exactly the right sort of data you want - it's mostly of the right shape, but some examples won't work and you don't want to care about them. You *can* just ignore these by aborting the test early, but this runs the risk of  accidentally testing a lot less than you think you are. Also it would be nice to spend less time on bad examples - if you're running 100 examples per test (the default) and it turns out 70 of those examples don't match your needs, that's a lot of wasted time.
-
-Иногда Hypothesis не дает вам точно *те самые*, нужные вам данные - это в основном правильная форма, но некоторые примеры не будут работать, а вы не хотите заботиться о них. Вы *можете* просто игнорировать их, прервав тест раньше, но это риск случайно испытать намного меньше, чем вы думаете. Также было бы неплохо потратить меньше времени на плохие примеры - если вы используете 100 примеров на тест (по умолчанию), и получается, что 70 из этих примеров не соответствуют вашим потребностям, это очень много времени.
+Иногда Hypothesis не дает вам ТОЧНО ТОЛЬКО *те самые*, нужные вам данные - это в основном правильно, но некоторые примеры при этом не будут работать, а вы не хотите заботиться о них. Вы *можете* просто игнорировать их, прервав тест раньше, но это риск случайно испытать намного меньше, чем вы расчитывали. Также было бы неплохо потратить меньше времени на плохие примеры - если вы используете 100 примеров на тест (по умолчанию), и получается, что 70 из этих примеров не соответствуют вашим потребностям, получается что очень много времени потрачено впустую.
 
 .. autofunction:: hypothesis.assume
 
-For example suppose you had the following test:
+Например, предположим, что у вас был следующий тест:
 
 
 .. code:: python
@@ -149,18 +147,16 @@ For example suppose you had the following test:
       assert x == -(-x)
 
 
-Running this gives us:
+Выполнение этого даст нам:
 
 .. code::
 
   Falsifying example: test_negation_is_self_inverse(x=float('nan'))
   AssertionError
 
-This is annoying. We know about NaN and don't really care about it, but as soon as Hypothesis
-finds a NaN example it will get distracted by that and tell us about it. Also the test will
-fail and we want it to pass.
+Это раздражает. Мы знаем о NaN и не очень заботимся об этом, но как только Hypothesis найдет пример NaN, он будет отвлекаться на это, всё бросит и поспешит рассказать нам об этом. Также тест провалится, а мы хотим его пройти.
 
-So lets block off this particular example:
+Так что давайте блокировать этот конкретный пример:
 
 .. code:: python
 
@@ -171,12 +167,13 @@ So lets block off this particular example:
       assume(not isnan(x))
       assert x == -(-x)
 
-And this passes without a problem.
+И это уже проходит без проблем.
 
-In order to avoid the easy trap where you assume a lot more than you intended, Hypothesis
-will fail a test when it can't find enough examples passing the assumption.
+In order to avoid the easy trap where you assume a lot more than you intended, Hypothesis will fail a test when it can't find enough examples passing the assumption.
 
-If we'd written:
+Чтобы избежать легкой ловушки, где вы assume намного больше, чем вы предполагали, Hypothesis не пройдет тест, когда он не сможет найти достаточно примеров, передающих предположение.
+
+Если бы мы написали:
 
 .. code:: python
 
@@ -185,21 +182,21 @@ If we'd written:
       assume(False)
       assert x == -(-x)
 
-Then on running we'd have got the exception:
+Тогда при запуске у нас получилось бы исключение:
 
 .. code::
 
-  Unsatisfiable: Unable to satisfy assumptions of hypothesis test_negation_is_self_inverse_for_non_nan. Only 0 examples considered satisfied assumptions
+  Unsatisfiable: Unable to satisfy assumptions of hypothesis test_negation_is_self_inverse_for_non_nan. Only 0 examples considered satisfied assumptions  (*Невозможно выполнить (assumptions) предположения hypothesis test_negation_is_self_inverse_for_non_nan. Только 0 примеров считались удовлетворенными предположениями*)
 
-~~~~~~~~~~~~~~~~~~~
-How good is assume?
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+Что хорошего в assume?
+~~~~~~~~~~~~~~~~~~~~~~
 
-Hypothesis has an adaptive exploration strategy to try to avoid things which falsify
-assumptions, which should generally result in it still being able to find examples in
-hard to find situations.
+Hypothesis has an adaptive exploration strategy to try to avoid things which falsify assumptions, which should generally result in it still being able to find examples in hard to find situations.
 
-Suppose we had the following:
+Hypothesis имеет адаптивную стратегию разведки, чтобы попытаться избежать случаев, которые фальсифицируют предположения, что, как правило, приводят к тому, что они все еще могут найти примеры в труднодоступных ситуациях.
+
+Предположим, у нас было следующее:
 
 
 .. code:: python
@@ -208,25 +205,22 @@ Suppose we had the following:
   def test_sum_is_positive(xs):
     assert sum(xs) > 0
 
-Unsurprisingly this fails and gives the falsifying example ``[]``.
+Неудивительно, что это терпит неудачу и дает фальсифицирующий пример ``[]``.
 
-Adding ``assume(xs)`` to this removes the trivial empty example and gives us ``[0]``.
+Добавление ``assume(xs)`` к этому удаляет тривиальный пустой пример и дает нам ``[0]``.
 
-Adding ``assume(all(x > 0 for x in xs))`` and it passes: the sum of a list of
-positive integers is positive.
+Добавление ``assume(all(x > 0 for x in xs))`` и он проходит: сумма списка положительных целых чисел положительна.
 
-The reason that this should be surprising is not that it doesn't find a
-counter-example, but that it finds enough examples at all.
+Причина того, что это должно быть удивительным не в том, что он не находит встречный пример, но что он находит достаточно примеров на всех.
 
-In order to make sure something interesting is happening, suppose we wanted to
-try this for long lists. e.g. suppose we added an ``assume(len(xs) > 10)`` to it.
-This should basically never find an example: a naive strategy would find fewer
-than one in a thousand examples, because if each element of the list is
-negative with probability one-half, you'd have to have ten of these go the right
-way by chance. In the default configuration Hypothesis gives up long before
-it's tried 1000 examples (by default it tries 200).
+Для того, чтобы убедиться, что происходит что-то интересное, предположим,  мы хотели испытать это для длинных списков. Например, предположим, что мы добавили ``assume(len(xs) > 10)`` к нему.
+Это в принципе никогда не найдет примера: наивная стратегия найдет меньше
+чем один из тысячи примеров, потому что, если каждый элемент списка
+отрицательный с вероятностью половиной, вам придется иметь десять из них,
+случайно. В конфигурации по умолчанию Гипотеза сдается задолго до
+он пробовал 1000 примеров (по умолчанию он пытается 200).
 
-Here's what happens if we try to run this:
+Вот что произойдет, если мы попытаемся запустить это:
 
 
 .. code:: python
