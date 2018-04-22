@@ -185,18 +185,17 @@ Hypothesis является :pypi:`available on pypi as "hypothesis" <hypothesis
 Создаст изолированную среду для вас, чтобы попробовать Hypothesis, не затрагивая установленные пакеты системы.
 
 -------------
-Running tests
+Выполнение тестов
 -------------
 
-In our example above we just let pytest discover and run our tests, but we could
-also have run it explicitly ourselves:
+В нашем примере выше мы просто позволяем pytest обнаружить и запустить наши тесты, но мы также могли бы запустить его явно сами:
 
 .. code:: python
 
   if __name__ == '__main__':
       test_decode_inverts_encode()
 
-We could also have done this as a :class:`python:unittest.TestCase`:
+Или так :class:`python:unittest.TestCase`:
 
 .. code:: python
 
@@ -210,12 +209,7 @@ We could also have done this as a :class:`python:unittest.TestCase`:
   if __name__ == '__main__':
       unittest.main()
 
-A detail: This works because Hypothesis ignores any arguments it hasn't been
-told to provide (positional arguments start from the right), so the self
-argument to the test is simply ignored and works as normal. This also means
-that Hypothesis will play nicely with other ways of parameterizing tests. e.g
-it works fine if you use pytest fixtures for some arguments and Hypothesis for
-others.
+Примечание: это работает, потому что Hypothesis игнорирует любые аргументы, которые ему не было сказано предоставить (позиционные аргументы начинаются справа), поэтому аргумент self для теста просто игнорируется и работает как обычно. Это также означает, что Hypothesis будет хорошо играть с другими способами параметризации тестов. Например, он отлично работает, если вы используете приспособления pytest для некоторых аргументов и Hypothesis для других.
 
 -------------
 Writing tests
