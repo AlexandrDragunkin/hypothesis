@@ -61,7 +61,7 @@
 (Для этого примера мы просто позволим pytest обнаружить и запустить тест. Мы расскажем о
 других способах, которыми вы могли бы запустить его, позже).
 
-Функция text возвращает то, что Hypothesis называет стратегией поиска. Объект с методами которые описывают, как произвести и упростить некоторые виды значений. :func:`@given <hypothesis.given>` декоратор затем берет наш тест функции и превращает его в
+Функция text возвращает то, что Hypothesis называет стратегией поиска. Объект с методами которые описывают, как произвести и упростить некоторые виды значений. Затем  декоратор :func:`@given <hypothesis.given>` берет наш тест функции и превращает его в
 параметризованный, который при вызове будет выполнять тестовую функцию по широкому диапазону совпадающих данных из этой стратегии.
 
 Во всяком случае, этот тест сразу находит ошибку в коде:
@@ -100,13 +100,9 @@ Hypothesis правильно указывает на то, что этот ко
   def test_decode_inverts_encode(s):
       assert decode(encode(s)) == s
 
-You don't have to do this, but it can be useful both for clarity purposes and for reliably hitting hard to find examples. Also in local development Hypothesis will just remember and reuse the examples anyway, but there's not currently a very good workflow for sharing those in your CI.
+Вам не обязательно этого делать, но это может быть полезно: как для ясности, так и для надежного поиска примеров. Также в рамках локального "обучения", в любом случае, Hypothesis будет помнить и повторно использовать примеры, но вот для обмена данными в вашей ситеме непрерывной интеграции (CI) в настоящее время нет приемлемого хорошего рабочего процесса.
 
-It's also worth noting that both example and given support keyword arguments as well as positional. The following would have worked just as well:
-
-Вам не нужно этого делать, но это может быть полезно как для ясности, так и для надежного поиска примеров. Также в рамках локального "обучения", в любом случае, Hypothesis будет помнить и повторно использовать примеры, но в настоящее время нет приемлемого хорошего рабочего процесса для обмена данными в вашей ситеме непрерывной интеграции (CI).
-
-Кроме того, стоит отметить, что оба примера и данной поддержки аргументов ключевого слова, а также позиционные. Следующее работало бы как раз также:
+Также стоит отметить, что аргументы ключевых слов example, и given могут быть как именованными, так и позиционными. Следующий код сработал бы так же хорошо::
 
 .. code:: python
 
@@ -115,8 +111,10 @@ It's also worth noting that both example and given support keyword arguments as 
   def test_decode_inverts_encode(s):
       assert decode(encode(s)) == s
 
-Suppose we had a more interesting bug and forgot to reset the count
-each time. Say we missed a line in our ``encode`` method:
+Suppose we had a more interesting bug and forgot to reset the count each time. Say we missed a line in our ``encode`` method:
+
+Предположим, у нас была более интересная ошибка и мы забыли перезагрузить счетчик
+в цикле. Скажем, мы пропустили строку в нашем методе ``encode``:
 
 .. code:: python
 
@@ -129,7 +127,7 @@ each time. Say we missed a line in our ``encode`` method:
             if prev:
                 entry = (prev, count)
                 lst.append(entry)
-            # count = 1  # Missing reset operation
+            # count = 1  # Отсутствует операция сброса
             prev = character
         else:
             count += 1
@@ -138,7 +136,7 @@ each time. Say we missed a line in our ``encode`` method:
         lst.append(entry)
     return lst
 
-Hypothesis quickly informs us of the following example:
+Hypothesis быстро проинформирует нас в следующем примере:
 
 .. code::
 
