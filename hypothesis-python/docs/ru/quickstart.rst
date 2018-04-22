@@ -1,17 +1,17 @@
-=================
-Quick start guide
-=================
+===================
+Краткое руководство
+===================
 
-This document should talk you through everything you need to get started with
-Hypothesis.
+Этот документ должен рассказать вам все, что вам нужно, чтобы начать работу с
+hypothesis.
 
 ----------
-An example
+Пример
 ----------
 
-Suppose we've written a `run length encoding
-<https://en.wikipedia.org/wiki/Run-length_encoding>`_ system and we want to test
-it out.
+Предположим, мы написали `run length encoding
+<https://en.wikipedia.org/wiki/Run-length_encoding>`_ систему, и хотим проверить
+это её.
 
 We have the following code which I took straight from the
 `Rosetta Code <http://rosettacode.org/wiki/Run-length_encoding>`_ wiki (OK, I
