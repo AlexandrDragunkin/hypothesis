@@ -150,33 +150,31 @@ Hypothesis быстро проинформирует нас в следующе�
 Примеры Hypothesis представляют собой действительный код Python, который вы можете запустить. Любые аргументы, которые вы явно указываете при вызове функции, не генерируются Hypothesis-ом, и если вы явно предоставляете *all* аргументы, Hypothesis просто вызовет базовую функцию один раз, а не будет запускать ее несколько раз.
 
 ----------
-Installing
+Установка
 ----------
 
-Hypothesis is :pypi:`available on pypi as "hypothesis" <hypothesis>`. You can install it with:
+Hypothesis является :pypi:`available on pypi as "hypothesis" <hypothesis>`. Вы можете установить его с помощью:
 
 .. code:: bash
 
   pip install hypothesis
 
-If you want to install directly from the source code (e.g. because you want to
-make changes and install the changed version) you can do this with:
+Если вы хотите установить непосредственно из исходного кода (например, потому что вы хотите
+внести изменения и установить измененную версию) вы можете сделать это с:
 
 .. code:: bash
 
   pip install -e .
 
-You should probably run the tests first to make sure nothing is broken. You can
-do this with:
+Вы, вероятно, должны сначала запустить тесты, чтобы убедиться, что ничего не сломано. Вы можете сделать это так:
 
 .. code:: bash
 
   python setup.py test
 
-Note that if they're not already installed this will try to install the test
-dependencies.
+Обратите внимание, что если они еще не установлены, будет предпринята попытка установить тестовые зависимости.
 
-You may wish to do all of this in a `virtualenv <https://virtualenv.pypa.io/en/latest/>`_. For example:
+Вы можете сделать все это в `virtualenv <https://virtualenv.pypa.io/en/latest/>`_. Например:
 
 .. code:: bash
 
@@ -184,8 +182,7 @@ You may wish to do all of this in a `virtualenv <https://virtualenv.pypa.io/en/l
   source venv/bin/activate
   pip install hypothesis
 
-Will create an isolated environment for you to try hypothesis out in without
-affecting your system installed packages.
+Создаст изолированную среду для вас, чтобы попробовать Hypothesis, не затрагивая установленные пакеты системы.
 
 -------------
 Running tests
