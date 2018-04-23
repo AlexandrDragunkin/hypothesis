@@ -338,38 +338,27 @@ In general if you *can* shape your strategies better to your tests you should - 
 3. Позиционные аргументы не могут использоваться, если базовая тестовая функция имеет аргументы переменной длины-(varargs), произвольные ключевые слова или аргументы, предназначенные только для ключевых слов.
 4. Функции, протестированные с ``given``, могут не иметь значений по умолчанию.
 
-The reason for the "rightmost named arguments" behaviour is so that
-using :func:`@given <hypothesis.given>` with instance methods works: ``self``
-will be passed to the function as normal and not be parametrized over.
+Причина поведения "крайних правых именованных аргументов" заключается в том, что :func:`@given <hypothesis.given>`  с помощью методов экземпляра: ``self`` будет передано функции как нормальное и не будет параметризоваться.
 
-The function returned by given has all the same arguments as the original
-test, minus those that are filled in by :func:`@given <hypothesis.given>`.
+Функция, возвращенная given, имеет все те же аргументы, что и исходный тест, за вычетом тех, которые заполнены:func:`@given <hypothesis.given>`.
 
--------------------------
-Custom function execution
--------------------------
+-----------------------------------
+Выполнение пользовательских функций
+-----------------------------------
 
-Hypothesis provides you with a hook that lets you control how it runs
-examples.
+Hypothesis предоставляет вам средство, которое позволяет вам контролировать, как он запускает примеры.
 
-This lets you do things like set up and tear down around each example, run
-examples in a subprocess, transform coroutine tests into normal tests, etc.
-For example, :class:`~hypothesis.extra.django.TransactionTestCase` in the
-Django extra runs each example in a separate database transaction.
+Это позволяет выполнять такие действия, как настройка и разборка каждого примера, выполнение примеров в подпроцессе, преобразование тестов сопрограмм в обычные тесты и т. д. Например, :class:`~hypothesis.extra.django.TransactionTestCase` в
+Django extra запускается каждый пример в отдельной транзакции базы данных.
 
-The way this works is by introducing the concept of an executor. An executor
-is essentially a function that takes a block of code and run it. The default
-executor is:
+Таким образом, вводя понятие executor или по русски *исполнителя*. executor-это, по сути, функция, которая берет блок кода и запускает его. По умолчанию executor-ом является:
 
 .. code:: python
 
     def default_executor(function):
         return function()
 
-You define executors by defining a method ``execute_example`` on a class. Any
-test methods on that class with :func:`@given <hypothesis.given>` used on them will use
-``self.execute_example`` as an executor with which to run tests. For example,
-the following executor runs all its code twice:
+Вы определяете исполнителей, определив метод ``execute_example`` в классе. Любые методы тестирования используемые в этом классе с  декоратором :func:`@given <hypothesis.given>` будут использовать ``self.execute_example`` как исполнителя теста. Например, следующий executor выполняет весь свой код дважды:
 
 .. code:: python
 
