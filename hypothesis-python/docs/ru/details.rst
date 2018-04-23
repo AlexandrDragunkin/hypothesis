@@ -210,14 +210,11 @@ Hypothesis имеет адаптивную стратегию разведки, 
 
 Добавление ``assume(all(x > 0 for x in xs))`` и он проходит: сумма списка положительных целых чисел положительна.
 
-Причина того, что это должно быть удивительным не в том, что он не находит встречный пример, но что он находит достаточно примеров на всех.
+Удивительное не в том, что он не находит встречный пример, но что он находит достаточно примеров на всех.
 
-Для того, чтобы убедиться, что происходит что-то интересное, предположим,  мы хотели испытать это для длинных списков. Например, предположим, что мы добавили ``assume(len(xs) > 10)`` к нему.
-Это в принципе никогда не найдет примера: наивная стратегия найдет меньше
-чем один из тысячи примеров, потому что, если каждый элемент списка
-отрицательный с вероятностью половиной, вам придется иметь десять из них,
-случайно. В конфигурации по умолчанию Гипотеза сдается задолго до
-он пробовал 1000 примеров (по умолчанию он пытается 200).
+In order to make sure something interesting is happening, suppose we wanted to try this for long lists. e.g. suppose we added an assume(len(xs) > 10) to it. This should basically never find an example: a naive strategy would find fewer than one in a thousand examples, because if each element of the list is negative with probability one-half, you'd have to have ten of these go the right way by chance. In the default configuration Hypothesis gives up long before it's tried 1000 examples (by default it tries 200).
+
+Чтобы убедиться, что происходит что-то интересное,  попробуем это для длинных списков. Например,  добавим к нему ``assume(len(xs) > 10)``. В принципе, это никогда не должно быть example: примитивная стратегия найдет меньше одного из тысячи примеров, потому что, если каждый элемент списка отрицателен с вероятностью наполовину, вам придется получить десять из них, случайно. В конфигурации по умолчанию гипотеза сдается задолго до того, как она попробовала 1000 примеров (по умолчанию она пробует 200).
 
 Вот что произойдет, если мы попытаемся запустить это:
 
@@ -242,9 +239,11 @@ Hypothesis имеет адаптивную стратегию разведки, 
 As you can see, Hypothesis doesn't find *many* examples here, but it finds some - enough to
 keep it happy.
 
-In general if you *can* shape your strategies better to your tests you should - for example
-:py:func:`integers(1, 1000) <hypothesis.strategies.integers>` is a lot better than
-``assume(1 <= x <= 1000)``, but ``assume`` will take you a long way if you can't.
+In general if you *can* shape your strategies better to your tests you should - for example :py:func:`integers(1, 1000) <hypothesis.strategies.integers>` is a lot better than ``assume(1 <= x <= 1000)``, but ``assume`` will take you a long way if you can't.
+
+Как видим, Hypothesis не находит *много* примеров, но некоторые - вполне достаточны, чтобы получить благополучный результат.
+
+В общем, если вы можете лучше формировать свои стратегии для своих тестов, вы должны - например :py:func:`integers(1, 1000) <hypothesis.strategies.integers>` намного лучше, чем предполагать (1 <= x <= 1000), но ``assume``, что вы пройдете долгий путь, если не сможете.
 
 ---------------------
 Defining strategies
