@@ -1,15 +1,12 @@
-========
-Settings
-========
+=========
+Настройки
+=========
 
-Hypothesis tries to have good defaults for its behaviour, but sometimes that's
-not enough and you need to tweak it.
+Hypothesis пытается использовать приемлемые значения в умолчаниях для своего поведения, но иногда этого недостаточно, и вам требуется настроить его.
 
-The mechanism for doing this is the :class:`~hypothesis.settings` object.
-You can set up a :func:`@given <hypothesis.given>` based test to use this using a settings
-decorator:
+Механизм для этого - объект :class:`~hypothesis.settings`. Вы можете изменить базовые настройки теста на основе :func:`@given <hypothesis.given>` с помощью декоратора настроек:
 
-:func:`@given <hypothesis.given>` invocation is as follows:
+:func:`@given <hypothesis.given>`данный вызов выглядит следующим образом:
 
 .. code:: python
 
