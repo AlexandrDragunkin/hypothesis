@@ -454,12 +454,9 @@ Inferred Strategies
     >>> builds(func).example()
     [-6993, '']
 
-:func:`@given <hypothesis.given>` does not perform any implicit inference
-for required arguments, as this would break compatibility with pytest fixtures.
-:const:`~hypothesis.infer` can be used as a keyword argument to explicitly
-fill in an argument from its type annotation.
 
- :func:`@given <hypothesis.given>` не выполняет никакого неявного вывода для требуемых аргументов, поскольку это нарушило бы совместимость с приспособлениями pytest. :const:`~hypothesis.infer` может использоваться в качестве аргумента ключевого слова для явного заполнения аргумента из аннотации типа.
+:func:`@given <hypothesis.given>` не выполняет никакого неявного вывода для требуемых аргументов, поскольку это нарушило бы совместимость с функционалом pytest. 
+:const:`~hypothesis.infer` может использоваться в качестве аргумента ключевого слова для явного заполнения аргумента из аннотации типа.
 
 .. code:: python
 
@@ -473,17 +470,10 @@ fill in an argument from its type annotation.
 Ограничения
 ~~~~~~~~~~~
 
-:pep:`3107` type annotations are not supported on Python 2, and Hypothesis
-does not inspect :pep:`484` type comments at runtime.  While
-:func:`~hypothesis.strategies.from_type` will work as usual, inference in
-:func:`~hypothesis.strategies.builds` and :func:`@given <hypothesis.given>`
-will only work if you manually create the ``__annotations__`` attribute
-(e.g. by using ``@annotations(...)`` and ``@returns(...)`` decorators).
-The :mod:`python:typing` module is fully supported on Python 2 if you have
-the backport installed.
+Аннотации типа :pep:`3107` не поддерживаются в Python 2, и Hypothesis не проверяет комментарии типа :pep:`484` во время выполнения.
+В то время как :func:`~hypothesis.strategies.from_type` будет работать как обычно, вывод в 
+:func:`~hypothesis.strategies.builds` и :func:`@given <hypothesis.given>` будет работать, только если вы вручную создадите атрибут ``__annotations__`` (например, с помощью  декораторов @annotations(...) и @returns(...)). 
 
-The :mod:`python:typing` module is provisional and has a number of internal
-changes between Python 3.5.0 and 3.6.1, including at minor versions.  These
-are all supported on a best-effort basis, but you may encounter problems with
-an old version of the module.  Please report them to us, and consider
-updating to a newer version of Python as a workaround.
+Модуль :mod:`python:typing` полностью поддерживается на Python 2, Если у вас установлен backport.
+
+Модуль :mod:`python:typing` является временным и имеет ряд внутренних изменений между Python 3.5.0 и 3.6.1, в том числе во второстепенных версиях. Все они поддерживаются, но могут возникнуть проблемы со старой версией модуля. Пожалуйста, сообщите нам о них и рассмотрите возможность обновления до более новой версии Python в качестве обходного пути.
