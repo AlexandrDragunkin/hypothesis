@@ -188,7 +188,7 @@ In order to avoid the easy trap where you assume a lot more than you intended, H
   Unsatisfiable: Unable to satisfy assumptions of hypothesis test_negation_is_self_inverse_for_non_nan. Only 0 examples considered satisfied assumptions  (*Невозможно выполнить (assumptions) предположения hypothesis test_negation_is_self_inverse_for_non_nan. Только 0 примеров считаются удовлетворенными предположениями (assumptions)*)
 
 ~~~~~~~~~~~~~~~~~~~~~~
-Что хорошего в assume?
+Как правильно assume-ить?
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Hypothesis has an adaptive exploration strategy to try to avoid things which falsify assumptions, which should generally result in it still being able to find examples in hard to find situations.
@@ -243,10 +243,10 @@ In general if you *can* shape your strategies better to your tests you should - 
 
 Как видим, Hypothesis не находит *много* примеров, но некоторые - вполне достаточны, чтобы получить благополучный результат.
 
-В общем, если вы можете лучше формировать свои стратегии для своих тестов, вы должны - например :py:func:`integers(1, 1000) <hypothesis.strategies.integers>` намного лучше, чем ``assume(1 <= x <= 1000)``, но ``assume``, что вы пройдете долгий путь, если не сможете.
+В общем, если вы можете себе позволить лучше формировать свои стратегии для своих тестов, то вы должны использовать - например :py:func:`integers(1, 1000) <hypothesis.strategies.integers>` намного лучше, вместо ``assume(1 <= x <= 1000)``.
 
 ---------------------
-Defining strategies
+Определение стратегий
 ---------------------
 
 The type of object that is used to explore the examples given to your test
