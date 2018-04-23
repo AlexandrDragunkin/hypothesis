@@ -243,29 +243,28 @@ In general if you *can* shape your strategies better to your tests you should - 
 
 Как видим, Hypothesis не находит *много* примеров, но некоторые - вполне достаточны, чтобы получить благополучный результат.
 
-В общем, если вы можете себе позволить лучше формировать свои стратегии для своих тестов, то вы должны использовать - например :py:func:`integers(1, 1000) <hypothesis.strategies.integers>` намного лучше, вместо ``assume(1 <= x <= 1000)``.
+В общем, если вы можете себе позволить точнее формировать свои стратегии для своих тестов, то вы должны использовать - например :py:func:`integers(1, 1000) <hypothesis.strategies.integers>` намного лучше, вместо ``assume(1 <= x <= 1000)``.
 
 ---------------------
 Определение стратегий
 ---------------------
 
-The type of object that is used to explore the examples given to your test
-function is called a :class:`~hypothesis.SearchStrategy`.
-These are created using the functions
-exposed in the :mod:`hypothesis.strategies` module.
+Тип объекта, который используется для изучения примеров, предоставленных вашей тестовой функции, называется :class:`~hypothesis.SearchStrategy`.
+Они создаются с использованием функций, открытых в модуле:mod:`hypothesis.strategies`.
 
 Many of these strategies expose a variety of arguments you can use to customize
 generation. For example for integers you can specify ``min`` and ``max`` values of
 integers you want.
 If you want to see exactly what a strategy produces you can ask for an example:
 
+Многие из этих стратегий предоставляют различные аргументы, которые можно использовать для настройки генерации. Например, для целых чисел вы можете указать ``min`` и ``max`` значения целых чисел, которые вам требуются. Если вы хотите увидеть, что именно выдаст стратегия, вы можете запросить пример:
+
 .. doctest::
 
     >>> integers(min_value=0, max_value=10).example()
     1
 
-Many strategies are built out of other strategies. For example, if you want
-to define a tuple you need to say what goes in each element:
+Многие стратегии построены из других стратегий. Например, если вы хотите определить кортеж, нужно сказать, что происходит в каждом элементе:
 
 .. doctest::
 
@@ -273,10 +272,10 @@ to define a tuple you need to say what goes in each element:
     >>> tuples(integers(), integers()).example()
     (-24597, 12566)
 
-Further details are :doc:`available in a separate document <data>`.
+Дополнительная информация :doc:`available in a separate document <data>`.
 
 ------------------------------------
-The gory details of given parameters
+The gory details of given parameters Сведения о заданных параметрах
 ------------------------------------
 
 .. autofunction:: hypothesis.given
