@@ -335,9 +335,9 @@ In general if you *can* shape your strategies better to your tests you should - 
 
 1. Вы можете передать любой аргумент ключевого слова ``given``.
 2. Позиционные аргументы ``given`` эквивалентны самым правым именованным аргументам для тестовой функции.
-3. Positional arguments may not be used if the underlying test function has
-   varargs, arbitrary keywords, or keyword-only arguments.
+3. Позиционные аргументы не могут использоваться, если базовая тестовая функция имеет параметры varargs, произвольные ключевые слова или аргументы только для ключевых слов
 4. Functions tested with ``given`` may not have any defaults.
+Функции, протестированные с ``given``, могут не иметь значений по умолчанию.
 
 The reason for the "rightmost named arguments" behaviour is so that
 using :func:`@given <hypothesis.given>` with instance methods works: ``self``
