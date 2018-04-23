@@ -445,7 +445,7 @@ Inferred Strategies
 
 :func:`~hypothesis.strategies.builds` проверят сигнатуру ``target`` (using :func:`~python:inspect.getfullargspec`). 
 Если есть обязательные аргументы с аннотациями типа и стратегия не была передана :func:`~hypothesis.strategies.builds`, то
-:func:`~hypothesis.strategies.from_type` используется для их заполнения. Вы также можете передать специальное значение :const:`hypothesis.infer` в качестве аргумента, чтобы заставить этот вывод аргументов со значением по умолчанию.
+:func:`~hypothesis.strategies.from_type` используется для их заполнения. Вы также можете передать специальное значение :const:`hypothesis.infer` в качестве аргумента, чтобы запихнуть в этот вывод аргументы со значением по умолчанию.
 
 .. doctest::
 
@@ -459,6 +459,8 @@ for required arguments, as this would break compatibility with pytest fixtures.
 :const:`~hypothesis.infer` can be used as a keyword argument to explicitly
 fill in an argument from its type annotation.
 
+ :func:`@given <hypothesis.given>` не выполняет никакого неявного вывода для требуемых аргументов, поскольку это нарушило бы совместимость с приспособлениями pytest. :const:`~hypothesis.infer` может использоваться в качестве аргумента ключевого слова для явного заполнения аргумента из аннотации типа.
+
 .. code:: python
 
     @given(a=infer)
@@ -468,7 +470,7 @@ fill in an argument from its type annotation.
     def test(a): pass
 
 ~~~~~~~~~~~
-Limitations
+Ограничения
 ~~~~~~~~~~~
 
 :pep:`3107` type annotations are not supported on Python 2, and Hypothesis
