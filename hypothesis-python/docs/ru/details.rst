@@ -407,6 +407,8 @@ some predicate.  This is generally useful for exploring custom strategies
 defined with :func:`@composite <hypothesis.strategies.composite>`, or
 experimenting with conditions for filtering data.
 
+Вы можете использовать функции исследования данных Hypothesis, чтобы найти значения, удовлетворяющие некоторому предикату(условию отбора). Это обычно полезно для изучения пользовательских стратегий, определенных с помощью: :func:`@composite <hypothesis.strategies.composite>`, или экспериментировать с условиями фильтрации данных.
+
 .. autofunction:: hypothesis.find
 
 .. doctest::
@@ -420,12 +422,9 @@ experimenting with conditions for filtering data.
     >>> find(sets(integers()), lambda x: sum(x) >= 10 and len(x) >= 3)
     {0, 1, 9}
 
-The first argument to :func:`~hypothesis.find` describes data in the usual way for an argument to
-:func:`~hypothesis.given`, and supports :doc:`all the same data types <data>`. The second is a
-predicate it must satisfy.
+Первый аргумент :func:`~hypothesis.find` описывает данные обычным способом для аргумента :func:`~hypothesis.given`, и поддерживает :doc:`all the same data types <data>`. Второй-это предикат, который он должен удовлетворить.
 
-Of course not all conditions are satisfiable. If you ask Hypothesis for an
-example to a condition that is always false it will raise an error:
+Конечно, не все условия выполняются. Если вы запросите у Hypothesis пример с условием, которое всегда ложно, это вызовет ошибку:
 
 .. doctest::
 
@@ -434,10 +433,7 @@ example to a condition that is always false it will raise an error:
         ...
     hypothesis.errors.NoSuchExample: No examples of condition lambda x: <unknown>
 
-(The ``lambda x: unknown`` is because Hypothesis can't retrieve the source code
-of lambdas from the interactive python console. It gives a better error message
-most of the time which contains the actual condition)
-
+(``lambda x: unknown`` связано с тем, что Hypothesis не может получить исходный код лямбда-выражения из интерактивной консоли python. )
 
 .. _type-inference:
 
@@ -445,17 +441,11 @@ most of the time which contains the actual condition)
 Inferred Strategies
 -------------------
 
-In some cases, Hypothesis can work out what to do when you omit arguments.
-This is based on introspection, *not* magic, and therefore has well-defined
-limits.
+В некоторых случаях гипотеза может решить, что делать, когда вы опускаете аргументы. Это основано на самоанализе, а не на магии, и поэтому имеет четко определенные пределы.
 
-:func:`~hypothesis.strategies.builds` will check the signature of the
-``target`` (using :func:`~python:inspect.getfullargspec`).
-If there are required arguments with type annotations and
-no strategy was passed to :func:`~hypothesis.strategies.builds`,
-:func:`~hypothesis.strategies.from_type` is used to fill them in.
-You can also pass the special value :const:`hypothesis.infer` as a keyword
-argument, to force this inference for arguments with a default value.
+:func:`~hypothesis.strategies.builds` проверят сигнатуру ``target`` (using :func:`~python:inspect.getfullargspec`). 
+Если есть обязательные аргументы с аннотациями типа и стратегия не была передана :func:`~hypothesis.strategies.builds`, то
+:func:`~hypothesis.strategies.from_type` используется для их заполнения. Вы также можете передать специальное значение :const:`hypothesis.infer` в качестве аргумента, чтобы заставить этот вывод аргументов со значением по умолчанию.
 
 .. doctest::
 
