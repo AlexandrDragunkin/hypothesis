@@ -3,6 +3,7 @@
 
 Этот документ должен рассказать вам обо всем, что вам нужно, чтобы начать работу с hypothesis.
 
+<cut />
 
 Пример
 ----------
@@ -243,3 +244,4 @@ Hypothesis является `available on pypi as "hypothesis"`. Вы может
 Если у вас возникли проблемы с запуском, не стесняйтесь и обращайтесь
 [asking for help](https://hypothesis.readthedocs.io/en/latest/community.html) .
 
+![](https://habrastorage.org/webt/jl/jn/bb/jljnbbjr-ejh473xy_eccsmknpk.png) [Обратно](https://habrahabr.ru/post/354134/)  [Дальше](https://habrahabr.ru/post/354146/) ![](https://habrastorage.org/webt/rw/dy/-g/rwdy-grsvbpcetjttrmecdkxtlk.png)
