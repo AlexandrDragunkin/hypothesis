@@ -252,11 +252,6 @@ In general if you *can* shape your strategies better to your tests you should - 
 Тип объекта, который используется для изучения примеров, предоставленных вашей тестовой функции, называется :class:`~hypothesis.SearchStrategy`.
 Они создаются с использованием функций, открытых в модуле:mod:`hypothesis.strategies`.
 
-Many of these strategies expose a variety of arguments you can use to customize
-generation. For example for integers you can specify ``min`` and ``max`` values of
-integers you want.
-If you want to see exactly what a strategy produces you can ask for an example:
-
 Многие из этих стратегий предоставляют различные аргументы, которые можно использовать для настройки генерации. Например, для целых чисел вы можете указать ``min`` и ``max`` значения целых чисел, которые вам требуются. Если вы хотите увидеть, что именно выдаст стратегия, вы можете запросить пример:
 
 .. doctest::
@@ -274,18 +269,15 @@ If you want to see exactly what a strategy produces you can ask for an example:
 
 Дополнительная информация :doc:`available in a separate document <data>`.
 
-------------------------------------
-The gory details of given parameters Сведения о заданных параметрах
-------------------------------------
+------------------------------------------
+Углубленные сведения о заданных параметрах
+------------------------------------------
 
 .. autofunction:: hypothesis.given
 
-The :func:`@given <hypothesis.given>` decorator may be used
-to specify which arguments of a function should
-be parametrized over. You can use either positional or keyword arguments or a mixture
-of the two.
+Декоратор :func:`@given <hypothesis.given>` может использоваться для указания того, какие аргументы функции должны быть параметризованы. Вы можете использовать аргументы позиционного или именованного вида или их микс.
 
-For example all of the following are valid uses:
+Например, все приведенные ниже действительны:
 
 .. code:: python
 
@@ -319,7 +311,7 @@ For example all of the following are valid uses:
       def test_a_thing(self, x):
           pass
 
-The following are not:
+Следующие нет:
 
 .. code:: python
 
@@ -339,12 +331,10 @@ The following are not:
   def j(x, y):
       pass
 
+Правила определения того, что является допустимым использованием ``given``, следующие:
 
-The rules for determining what are valid uses of ``given`` are as follows:
-
-1. You may pass any keyword argument to ``given``.
-2. Positional arguments to ``given`` are equivalent to the rightmost named
-   arguments for the test function.
+1. Вы можете передать любой аргумент ключевого слова ``given``.
+2. Позиционные аргументы ``given`` эквивалентны самым правым именованным аргументам для тестовой функции.
 3. Positional arguments may not be used if the underlying test function has
    varargs, arbitrary keywords, or keyword-only arguments.
 4. Functions tested with ``given`` may not have any defaults.
