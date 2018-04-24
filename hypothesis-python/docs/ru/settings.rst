@@ -162,16 +162,11 @@ Settings могут быть созданы путем вызова :class:`~hyp
 settings Profiles
 ~~~~~~~~~~~~~~~~~
 
-Depending on your environment you may want different default settings.
-For example: during development you may want to lower the number of examples
-to speed up the tests. However, in a CI environment you may want more examples
-so you are more likely to find bugs.
+В зависимости от окружения могут потребоваться различные параметры по умолчанию. Например: во время разработки вы можете уменьшить количество примеров, чтобы ускорить тесты. Однако в среде CI может потребоваться больше примеров, чтобы с большей вероятностью найти ошибки.
 
-Hypothesis allows you to define different settings profiles. These profiles
-can be loaded at any time.
+Hypothesis позволяет определить различные настройки профилей. Эти профили могут быть загружены в любое время.
 
-Loading a profile changes the default settings but will not change the behavior
-of tests that explicitly change the settings.
+Загрузка профиля изменяет параметры по умолчанию, но не изменяет поведение тестов, которые явно изменяют параметры.
 
 .. doctest::
 
