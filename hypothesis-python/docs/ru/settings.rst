@@ -1,15 +1,12 @@
-========
-Settings
-========
+=========
+Настройки
+=========
 
-Hypothesis tries to have good defaults for its behaviour, but sometimes that's
-not enough and you need to tweak it.
+Hypothesis пытается использовать приемлемые значения в умолчаниях для своего поведения, но иногда этого недостаточно, и вам требуется настроить его.
 
-The mechanism for doing this is the :class:`~hypothesis.settings` object.
-You can set up a :func:`@given <hypothesis.given>` based test to use this using a settings
-decorator:
+Механизм для этого - объект :class:`~hypothesis.settings`. Вы можете изменить базовые настройки теста на основе :func:`@given <hypothesis.given>` с помощью декоратора настроек:
 
-:func:`@given <hypothesis.given>` invocation is as follows:
+:func:`@given <hypothesis.given>`данный вызов выглядит следующим образом:
 
 .. code:: python
 
@@ -20,12 +17,9 @@ decorator:
     def test_this_thoroughly(x):
         pass
 
-This uses a :class:`~hypothesis.settings` object which causes the test to receive a much larger
-set of examples than normal.
+При этом используется объект :class:`~hypothesis.settings`, который приводит к тому, что тест получает гораздо больший набор примеров, чем обычный.
 
-This may be applied either before or after the given and the results are
-the same. The following is exactly equivalent:
-
+Он может быть применено либо до, либо после *given*. Это не повлияет на результаты. В точности эквивалентен предыдущему следующий пример:
 
 .. code:: python
 
@@ -36,9 +30,10 @@ the same. The following is exactly equivalent:
     def test_this_thoroughly(x):
         pass
 
-------------------
-Available settings
-------------------
+-------------------
+Доступные установки
+-------------------
+`class hypothesis.settings(parent=None, **kwargs)`
 
 .. autoclass:: hypothesis.settings
     :members:
@@ -46,25 +41,25 @@ Available settings
 
 .. _phases:
 
-~~~~~~~~~~~~~~~~~~~~~
-Controlling What Runs
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Управление тем, что выполняется
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Hypothesis divides tests into four logically distinct phases:
+Hypothesis делит тесты на четыре логически различные фазы:
 
-1. Running explicit examples :ref:`provided with the @example decorator <providing-explicit-examples>`.
-2. Rerunning a selection of previously failing examples to reproduce a previously seen error
-3. Generating new examples.
-4. Attempting to shrink an example found in phases 2 or 3 to a more manageable
-   one (explicit examples cannot be shrunk).
+1. Выполнение явных примеров :ref:`provided with the @example decorator <providing-explicit-examples>`.
+2. Повторный запуск выборки ранее неудачных примеров для воспроизведения ранее замеченной ошибки.
+3. Создание новых примеров.
+4. Попытка сжать пример, найденный на этапах 2 или 3, до более управляемого (явные примеры не могут быть сжаты).
+   
+Настройка фаз обеспечивает точный контроль над тем, какая из них выполняется, при этом каждая фаза соответствует значению в перечислении :class:`~hypothesis._settings.Phase` :
 
-The phases setting provides you with fine grained control over which of these run,
-with each phase corresponding to a value on the :class:`~hypothesis._settings.Phase` enum:
+1. ``Phase.explicit`` управляет выполнением явных примеров.
+2. ``Phase.reuse`` управляет повторным использованием предыдущих примеров.
+3. ``Phase.generate`` определяет, будут ли создаваться новые примеры.
+4. ``Phase.shrink`` управляет сокращением (сжатием) примеров.
 
-1. ``Phase.explicit`` controls whether explicit examples are run.
-2. ``Phase.reuse`` controls whether previous examples will be reused.
-3. ``Phase.generate`` controls whether new examples will be generated.
-4. ``Phase.shrink`` controls whether examples will be shrunk.
+Аргумент phases принимает коллекцию с любым их подмножеством. например, ``settings(phases=[Phase.generate, Phase.shrink])`` будет генерировать новые примеры и сжимать их, но не будет запускать явные примеры или повторно использовать предыдущие сбои, в то время как ``settings(phases=[Phase.explicit])`` будут выполняться только явные примеры.
 
 The phases argument accepts a collection with any subset of these. e.g.
 ``settings(phases=[Phase.generate, Phase.shrink])`` will generate new examples
