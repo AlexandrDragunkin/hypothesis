@@ -178,8 +178,7 @@ Hypothesis позволяет определить различные настр
     >>> settings().max_examples
     1000
 
-Instead of loading the profile and overriding the defaults you can retrieve profiles for
-specific tests.
+Вместо загрузки профиля и переопределения значений по умолчанию можно получить профили для определенных тестов.
 
 .. doctest::
 
@@ -188,10 +187,8 @@ specific tests.
     ...
     1000
 
-Optionally, you may define the environment variable to load a profile for you.
-This is the suggested pattern for running your tests on CI.
-The code below should run in a `conftest.py` or any setup/initialization section of your test suite.
-If this variable is not defined the Hypothesis defined defaults will be loaded.
+При необходимости можно определить переменную окружения для загрузки профиля. Это Рекомендуемый шаблон для выполнения тестов в CI. Приведенный ниже код должен выполняться в `conftest.py` или любой раздел setup/initialization комплекта тестов. Если эта переменная не определена, будут загружены значения по умолчанию, определенные Hypothesis.
+	
 
 .. doctest::
 
