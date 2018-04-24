@@ -90,14 +90,10 @@ Hypothesis делит тесты на четыре логически разли
     Shrunk example to [1]
     [1]
 
-The four levels are quiet, normal, verbose and debug. normal is the default,
-while in quiet mode Hypothesis will not print anything out, not even the final
-falsifying example. debug is basically verbose but a bit more so. You probably
-don't want it.
+Четыре уровня: quiet (тихий), normal (нормальный), verbose (подробный) и debug (отладочный). normal-это значение по умолчанию, в то время как в quiet режиме Hypothesis не будет ничего печатать, даже окончательный пример фальсификации. debug по сути это то тот же  verbose, но немного подробнее. Вы, наверное, не хотите этого.
 
-If you are using :pypi:`pytest`, you may also need to
-:doc:`disable output capturing for passing tests <pytest:capture>`.
-
+При использовании pytest также может потребоваться :doc:`disable output capturing for passing tests <pytest:capture>` (запись выходных данных для прохождения тестов).	
+	
 -------------------------
 Building settings objects
 -------------------------
