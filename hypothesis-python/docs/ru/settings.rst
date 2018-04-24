@@ -122,7 +122,7 @@ Settings могут быть созданы путем вызова :class:`~hyp
     200
 
 ----------------
-Default settings
+Настройка settings
 ----------------
 
 At any given point in your program there is a current default settings,
