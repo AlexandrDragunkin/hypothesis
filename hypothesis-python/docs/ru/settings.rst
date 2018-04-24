@@ -95,11 +95,10 @@ Hypothesis делит тесты на четыре логически разли
 При использовании pytest также может потребоваться :doc:`disable output capturing for passing tests <pytest:capture>` (запись выходных данных для прохождения тестов).	
 	
 -------------------------
-Building settings objects
+Сборка settings objects
 -------------------------
 
-Settings can be created by calling :class:`~hypothesis.settings` with any of the available settings
-values. Any absent ones will be set to defaults:
+Settings могут быть созданы путем вызова :class:`~hypothesis.settings` с любым из доступных значений settings. Любые отсутствующие будут установлены по умолчанию:
 
 .. doctest::
 
@@ -109,10 +108,8 @@ values. Any absent ones will be set to defaults:
     >>> settings(max_examples=10).max_examples
     10
 
-You can also pass a 'parent' settings object as the first argument,
-and any settings you do not specify as keyword arguments will be
-copied from the parent settings:
-
+В качестве первого аргумента можно также передать объект - "родительский" settings, и любые параметры, не указанные в качестве именованных аргументов, будут скопированы из родительских параметров:	
+	
 .. doctest::
 
     >>> parent = settings(max_examples=10)
