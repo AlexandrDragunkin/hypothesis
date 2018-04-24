@@ -125,15 +125,9 @@ Settings могут быть созданы путем вызова :class:`~hyp
 Настройка settings
 ----------------
 
-At any given point in your program there is a current default settings,
-available as ``settings.default``. As well as being a settings object in its own
-right, all newly created settings objects which are not explicitly based off
-another settings are based off the default, so will inherit any values that are
-not explicitly set from it.
+В любой момент в вашей программе есть текущие настройки по умолчанию, доступные в качестве ``settings.default``. Помимо того, что объект settings сам по себе, все вновь созданные объекты settings, которые явно не основаны на других настройках, основаны на значении по умолчанию, поэтому будут наследовать любые значения, которые явно не установлены из него.
 
-You can change the defaults by using profiles (see next section), but you can
-also override them locally by using a settings object as a :ref:`context manager <python:context-managers>`
-
+Значения по умолчанию можно изменить с помощью профилей (См. следующий раздел), но их также можно переопределить локально с помощью объекта параметров в качестве :ref:`context manager <python:context-managers>`
 
 .. doctest::
 
@@ -145,9 +139,9 @@ also override them locally by using a settings object as a :ref:`context manager
     >>> settings().max_examples
     100
 
-Note that after the block exits the default is returned to normal.
+Обратите внимание, что после выхода из блока значение по умолчанию возвращается в нормальное состояние.
 
-You can use this by nesting test definitions inside the context:
+Это можно использовать, вложив определения тестов в контекст:
 
 .. code:: python
 
