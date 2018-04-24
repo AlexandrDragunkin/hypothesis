@@ -199,8 +199,7 @@ Hypothesis позволяет определить различные настр
     >>> settings.register_profile("debug", max_examples=10, verbosity=Verbosity.verbose)
     >>> settings.load_profile(os.getenv(u'HYPOTHESIS_PROFILE', 'default'))
 
-If you are using the hypothesis pytest plugin and your profiles are registered
-by your conftest you can load one with the command line option ``--hypothesis-profile``.
+Если вы используете плагин hypothesis pytest и ваши профили зарегистрированы вашим conftest вы можете загрузить один с опцией командной строки ``--hypothesis-profile``.
 
 .. code:: bash
 
