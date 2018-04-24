@@ -210,12 +210,9 @@ Hypothesis позволяет определить различные настр
 Timeouts
 ~~~~~~~~
 
-The timeout functionality of Hypothesis is being deprecated, and will
-eventually be removed. For the moment, the timeout setting can still be set
-and the old default timeout of one minute remains.
+Функционал timeout Hypothesis является устаревшим и будет удален. На данный момент парметры timeout все еще может быть назначены, и старое умолчание таймаут одна минута остается.
 
-If you want to future proof your code you can get
-the future behaviour by setting it to the value ``hypothesis.unlimited``.
+Если вы хотите в будущем использовать свой код, вы можете оценить будущее поведение, установив timeout в ``hypothesis.unlimited``.
 
 .. code:: python
 
