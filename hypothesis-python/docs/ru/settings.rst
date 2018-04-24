@@ -152,14 +152,10 @@ Settings могут быть созданы путем вызова :class:`~hyp
         def test_this_thoroughly(x):
             pass
 
-All settings objects created or tests defined inside the block will inherit their
-defaults from the settings object used as the context. You can still override them
-with custom defined settings of course.
+Все созданные объекты settings или тесты, определенные внутри блока, наследуют значения по умолчанию от объекта settings, используемого в качестве контекста. Вы, конечно, все еще можете переопределить их с помощью пользовательских настроек.
 
-Warning: If you use define test functions which don't use :func:`@given <hypothesis.given>`
-inside a context block, these will not use the enclosing settings. This is because the context
-manager only affects the definition, not the execution of the function.
-
+Внимание!: Если вы используете определение тестовых функции, которые не используют :func:`@given <hypothesis.given>` внутри блока контекста, они не будут использовать вложенные  параметры. Это происходит потому, что менеджер контекста влияет только на определение, а не на выполнение функции.			
+			
 .. _settings_profiles:
 
 ~~~~~~~~~~~~~~~~~
