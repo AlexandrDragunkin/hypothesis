@@ -67,9 +67,7 @@ Hypothesis делит тесты на четыре логически разли
 Просмотр промежуточного результата
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To see what's going on while Hypothesis runs your tests, you can turn
-up the verbosity setting. This works with both :func:`~hypothesis.core.find`
-and :func:`@given <hypothesis.given>`.
+Чтобы увидеть, что происходит, пока Hypothesis выполняет ваши тесты, вы можете включить в настройке Verbosity. Она работает, как с :func:`~hypothesis.core.find`, так и с :func:`@given <hypothesis.given>`.
 
 .. doctest::
 
