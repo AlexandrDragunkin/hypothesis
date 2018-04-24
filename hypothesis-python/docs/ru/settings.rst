@@ -61,16 +61,10 @@ Hypothesis делит тесты на четыре логически разли
 
 Аргумент phases принимает коллекцию с любым их подмножеством. например, ``settings(phases=[Phase.generate, Phase.shrink])`` будет генерировать новые примеры и сжимать их, но не будет запускать явные примеры или повторно использовать предыдущие сбои, в то время как ``settings(phases=[Phase.explicit])`` будут выполняться только явные примеры.
 
-The phases argument accepts a collection with any subset of these. e.g.
-``settings(phases=[Phase.generate, Phase.shrink])`` will generate new examples
-and shrink them, but will not run explicit examples or reuse previous failures,
-while ``settings(phases=[Phase.explicit])`` will only run the explicit
-examples.
-
 .. _verbose-output:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-Seeing intermediate result
+Просмотр промежуточного результата
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To see what's going on while Hypothesis runs your tests, you can turn
