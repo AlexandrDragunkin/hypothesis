@@ -233,6 +233,10 @@ There is however now a timing related health check which is designed to catch
 tests that run for ages by accident. If you really want your test to run
 forever, the following code will enable that:
 
+Это приведет к тому, что ваш код будет выполняться до тех пор, пока он не достигнет нормальных пределов примера Hypothesis, независимо от того, сколько времени это займет. ``timeout=unlimited`` останется допустимым параметром после отказа от функции timeout (но затем будет иметь свой собственный цикл старения).
+
+Существует, однако, в настоящее время сроки, связанные с health check, который предназначен, чтобы отловить тесты, которые  готовы работать случайно на века . Если вы действительно хотите, чтобы ваш тест выполнялся вечно, следующий код позволит это:
+
 .. code:: python
 
     from hypothesis import given, settings, unlimited, HealthCheck
