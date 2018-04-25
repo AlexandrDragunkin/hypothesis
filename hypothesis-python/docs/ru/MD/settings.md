@@ -167,15 +167,15 @@ Hypothesis пытается использовать приемлемые зна
 
 > **use_coverage**
 
-Whether to use coverage information to improve Hypothesis’s ability to find bugs.
+Следует ли использовать информацию о покрытии для улучшения способности Hypothesis находить ошибки.
 
-You should generally leave this turned on unless your code performs poorly when run under coverage. If you turn it off, please file a bug report or add a comment to an existing one about the problem that prompted you to do so.
+Обычно следует оставить это значение True, если конечно код не начинает работать плохо при выполнении под покрытием. Если все же вам пришлось выключить это значение, пожалуйста, отправьте сообщение об ошибке или добавьте комментарий к существующей проблеме, которая вынудила вас это сделать.
 
 Значение по умолчанию: True
 
 > **verbosity**
 
-Control the verbosity level of Hypothesis messages
+Контроль уровня детализации Hypothesis сообщений.
 
 Значение по умолчанию: Verbosity.normal
 
