@@ -34,39 +34,43 @@ Hypothesis пытается использовать приемлемые зна
 Доступные установки
 -------------------
 
-`class hypothesis.settings(parent=None, **kwargs)`
+**`class hypothesis.settings(parent=None, **kwargs)`**
 
+Объект settings управляет множеством параметров, используемых при фальсификации. Они могут контролировать как стратегию фальсификации, так и детали генерируемых данных.
 
-
-A settings object controls a variety of parameters that are used in falsification. These may control both the falsification strategy and the details of the data that is generated.
-
-Default values are picked up from the settings.default object and changes made there will be picked up in newly created settings.
+Значения по умолчанию выбираются из объекта  *settings.default* и изменения будут подхвачены во вновь созданные настройки.
 
 > ***classmethod define_setting(name, description, default, options=None, validator=None, show_default=True, future_default=not_set, deprecation_message=None, hide_repr=not_set)*** [[source]](https://hypothesis.readthedocs.io/en/latest/_modules/hypothesis/_settings.html#settings)
 
-Add a new setting.
+Добавление нового setting.
 
-name is the name of the property that will be used to access the setting. This must be a valid python identifier.
-description will appear in the property’s docstring
-default is the default value. This may be a zero argument function in which case it is evaluated and its result is stored the first time it is accessed on any given settings object.
-buffer_size
+- **name**-имя свойства, которое будет использоваться для доступа к настройке. Это должен быть действительный идентификатор python.
+- **description**-описание появится в *docstring* свойства
+- **default**-используется значение по умолчанию. Это может быть функция с нулевым аргументом, в этом случае она вычисляется, и ее результат сохраняется при первом обращении к ней для любого заданного объекта settings.
+
+
+> **buffer_size**
+
 The size of the underlying data used to generate examples. If you need to generate really large examples you may want to increase this, but it will make your tests slower.
 
 default value: 8192
 
-database
+> **database**
+
 An instance of hypothesis.database.ExampleDatabase that will be used to save examples to and load previous examples from. May be None in which case no storage will be used, :memory: for an in-memory database, or any path for a directory-based example database.
 
 default value: (dynamically calculated)
 
-database_file
+> **database_file**
+
 The file or directory location to save and load previously tried examples; :memory: for an in-memory cache or None to disable caching entirely.
 
 default value: (dynamically calculated)
 
 The database_file setting is deprecated in favor of the database setting, and will be removed in a future version. It only exists at all for complicated historical reasons and you should just use database instead.
 
-deadline
+> **deadline**
+
 If set, a time in milliseconds (which may be a float to express smaller units of time) that each individual example (i.e. each time your test function is called, not the whole decorated test) within a test is not allowed to exceed. Tests which take longer than that may be converted into errors (but will not necessarily be if close to the deadline, to allow some variability in test run time).
 
 Set this to None to disable this behaviour entirely.
@@ -75,43 +79,50 @@ In future this will default to 200. For now, a HypothesisDeprecationWarning will
 
 default value: not_set
 
-derandomize
+> **derandomize**
+
 If this is True then hypothesis will run in deterministic mode where each falsification uses a random number generator that is seeded based on the hypothesis to falsify, which will be consistent across multiple runs. This has the advantage that it will eliminate any randomness from your tests, which may be preferable for some situations. It does have the disadvantage of making your tests less likely to find novel breakages.
 
 default value: False
 
-max_examples
+> **max_examples**
+
 Once this many satisfying examples have been considered without finding any counter-example, falsification will terminate.
 
 default value: 100
 
-max_iterations
+> **max_iterations**
+
 This doesn’t actually do anything, but remains for compatibility reasons.
 
 default value: not_set
 
 The max_iterations setting has been disabled, as internal heuristics are more useful for this purpose than a user setting. It no longer has any effect.
 
-max_shrinks
+> **max_shrinks**
+
 Once this many successful shrinks have been performed, Hypothesis will assume something has gone a bit wrong and give up rather than continuing to try to shrink the example.
 
 default value: 500
 
-min_satisfying_examples
+> **min_satisfying\_examples**
+
 This doesn’t actually do anything, but remains for compatibility reasons.
 
 default value: not_set
 
 The min_satisfying_examples setting has been deprecated and disabled, due to overlap with the filter_too_much healthcheck and poor interaction with the max_examples setting.
 
-perform_health_check
+> **perform_health\_check**
+
 If set to True, Hypothesis will run a preliminary health check before attempting to actually execute your test.
 
 default value: not_set
 
 This setting is deprecated, as perform_health_check=False duplicates the effect of suppress_health_check=HealthCheck.all(). Use that instead!
 
-phases
+> **phases**
+
 Control which phases should be run. See the full documentation for more details
 
 default value: (<Phase.explicit: 0>, <Phase.reuse: 1>, <Phase.generate: 2>, <Phase.shrink: 3>)
