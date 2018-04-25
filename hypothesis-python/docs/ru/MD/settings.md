@@ -68,43 +68,41 @@ Hypothesis пытается использовать приемлемые зна
 
 Значение по умолчанию: (dynamically calculated)
 
-The database_file setting is deprecated in favor of the database setting, and will be removed in a future version. It only exists at all for complicated historical reasons and you should just use database instead.
-
 Параметр *database_file* устарел в пользу параметра *database* и будет удален в следующей версии. Он существует только для сложных исторических причин, и вам настоятельно рекомендуется использовать database вместо него.
 
 > **deadline**
 
-If set, a time in milliseconds (which may be a float to express smaller units of time) that each individual example (i.e. each time your test function is called, not the whole decorated test) within a test is not allowed to exceed. Tests which take longer than that may be converted into errors (but will not necessarily be if close to the deadline, to allow some variability in test run time).
+Если задано, то это время в миллисекундах (значение может быть числом с плавающей точкой для выражения меньших единиц времени), которое не может превышать каждый отдельный пример (т. е. каждый раз, когда вызывается тестовая функция, а не весь оформленный тест) в тесте. Тесты, которые занимают больше времени, чем это значение могут быть преобразованы в ошибки (но это не обязательно будет происходить всегда, если значение близко к крайнему сроку, чтобы позволить  внести некоторую гибкость во время выполнения теста).
 
-Set this to None to disable this behaviour entirely.
+Установите значение None, чтобы полностью отключить это поведение.
 
-In future this will default to 200. For now, a HypothesisDeprecationWarning will be emitted if you exceed that default deadline and have not explicitly set a deadline yourself.
+В будущем это значение будет по умолчанию до 200. На данный момент выдается HypothesisDeprecationWarning, если вы превысите этот крайний срок по умолчанию и не указали явный срок.
 
 Значение по умолчанию: not_set
 
 > **derandomize**
 
-If this is True then hypothesis will run in deterministic mode where each falsification uses a random number generator that is seeded based on the hypothesis to falsify, which will be consistent across multiple runs. This has the advantage that it will eliminate any randomness from your tests, which may be preferable for some situations. It does have the disadvantage of making your tests less likely to find novel breakages.
+Если True, то hypothesis будет работать в детерминированном режиме, где каждая фальсификация использует генератор случайных чисел на основе гипотезы фальсификации, которые будут согласованы на нескольких прогонах. Это имеет преимущество в том, что будет устранена любая случайность из ваших тестов, что может быть предпочтительнее для некоторых ситуаций. У этого есть недостаток, делающий ваши тесты менее вероятными для поиска новых аварийных ситуаций.
 
 Значение по умолчанию: False
 
 > **max_examples**
 
-Once this many satisfying examples have been considered without finding any counter-example, falsification will terminate.
+Как только это множество удовлетворяющих условиям примеров будет рассмотрено, не найдя никакого встречного примера, фальсификация прекратится.
 
 Значение по умолчанию: 100
 
 > **max_iterations**
 
-This doesn’t actually do anything, but remains for compatibility reasons.
+По факту ничего не делает, но остается по соображениям совместимости.
 
 Значение по умолчанию: not_set
 
-The max_iterations setting has been disabled, as internal heuristics are more useful for this purpose than a user setting. It no longer has any effect.
+Параметр max_iterations отключен, поскольку для этой цели более эффективны внутренние эвристики, чем пользовательская настройка. Это уже не имеет никакого эффекта.
 
 > **max_shrinks**
 
-Once this many successful shrinks have been performed, Hypothesis will assume something has gone a bit wrong and give up rather than continuing to try to shrink the example.
+Контролирует число выполненных успешных сокращений примера. При превышении этого порога Hypothesis предположит, что что-то пошло немного не так, и прекратит попытки уменьшить пример.
 
 Значение по умолчанию: 500
 
