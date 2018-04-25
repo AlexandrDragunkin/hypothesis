@@ -153,16 +153,17 @@ Hypothesis пытается использовать приемлемые зна
 
 > **suppress\_health\_check**
 
-A list of health checks to disable.
+Список отключаемых проверок работоспособности.
 
 Значение по умолчанию: ()
 
 > **timeout**
-Once this many seconds have passed, falsify will terminate even if it has not found many examples. This is a soft rather than a hard limit - Hypothesis won’t e.g. interrupt execution of the called function to stop it. If this value is <= 0 then no timeout will be applied.
+
+Как только будет достигнуто это значение в секундах, фальсификация завершится, даже если она не нашла какие то примеры. Это мягкий, а не жесткий предел - Hypothesis не будет прерывать выполнение вызываемой функции, чтобы остановить ее. Если это значение <= 0, то таймаут не будет применен.
 
 Значение по умолчанию: 60
 
-The timeout setting is deprecated and will be removed in a future version of Hypothesis. To get the future behaviour set timeout=hypothesis.unlimited instead (which will remain valid for a further deprecation period after this setting has gone away).
+Параметр timeout устарел и будет удален в будущей версии Hypothesis. Для получения ожидаемого в будущем поведения установите *timeout=hypothesis.unlimited* вместо этого (который будет оставаться действительным в течение дальнейшего периода устаревания после того, как этот параметр исчезнет).
 
 > **use_coverage**
 
