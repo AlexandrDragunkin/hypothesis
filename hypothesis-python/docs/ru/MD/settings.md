@@ -51,21 +51,21 @@ Hypothesis пытается использовать приемлемые зна
 
 > **buffer_size**
 
-The size of the underlying data used to generate examples. If you need to generate really large examples you may want to increase this, but it will make your tests slower.
+Размер исходных данных, используемых для генерации примеров. Если вам нужно создать действительно большие примеры, вы можете увеличить это значение, но это сделает ваши тесты медленнее.
 
-default value: 8192
+значение по умолчанию: 8192
 
 > **database**
 
 An instance of hypothesis.database.ExampleDatabase that will be used to save examples to and load previous examples from. May be None in which case no storage will be used, :memory: for an in-memory database, or any path for a directory-based example database.
 
-default value: (dynamically calculated)
+Значение по умолчанию: (dynamically calculated)
 
 > **database_file**
 
 The file or directory location to save and load previously tried examples; :memory: for an in-memory cache or None to disable caching entirely.
 
-default value: (dynamically calculated)
+Значение по умолчанию: (dynamically calculated)
 
 The database_file setting is deprecated in favor of the database setting, and will be removed in a future version. It only exists at all for complicated historical reasons and you should just use database instead.
 
@@ -77,25 +77,25 @@ Set this to None to disable this behaviour entirely.
 
 In future this will default to 200. For now, a HypothesisDeprecationWarning will be emitted if you exceed that default deadline and have not explicitly set a deadline yourself.
 
-default value: not_set
+Значение по умолчанию: not_set
 
 > **derandomize**
 
 If this is True then hypothesis will run in deterministic mode where each falsification uses a random number generator that is seeded based on the hypothesis to falsify, which will be consistent across multiple runs. This has the advantage that it will eliminate any randomness from your tests, which may be preferable for some situations. It does have the disadvantage of making your tests less likely to find novel breakages.
 
-default value: False
+Значение по умолчанию: False
 
 > **max_examples**
 
 Once this many satisfying examples have been considered without finding any counter-example, falsification will terminate.
 
-default value: 100
+Значение по умолчанию: 100
 
 > **max_iterations**
 
 This doesn’t actually do anything, but remains for compatibility reasons.
 
-default value: not_set
+Значение по умолчанию: not_set
 
 The max_iterations setting has been disabled, as internal heuristics are more useful for this purpose than a user setting. It no longer has any effect.
 
@@ -103,13 +103,13 @@ The max_iterations setting has been disabled, as internal heuristics are more us
 
 Once this many successful shrinks have been performed, Hypothesis will assume something has gone a bit wrong and give up rather than continuing to try to shrink the example.
 
-default value: 500
+Значение по умолчанию: 500
 
 > **min_satisfying\_examples**
 
 This doesn’t actually do anything, but remains for compatibility reasons.
 
-default value: not_set
+Значение по умолчанию: not_set
 
 The min_satisfying_examples setting has been deprecated and disabled, due to overlap with the filter_too_much healthcheck and poor interaction with the max_examples setting.
 
@@ -117,7 +117,7 @@ The min_satisfying_examples setting has been deprecated and disabled, due to ove
 
 If set to True, Hypothesis will run a preliminary health check before attempting to actually execute your test.
 
-default value: not_set
+Значение по умолчанию: not_set
 
 This setting is deprecated, as perform_health_check=False duplicates the effect of suppress_health_check=HealthCheck.all(). Use that instead!
 
@@ -125,7 +125,7 @@ This setting is deprecated, as perform_health_check=False duplicates the effect 
 
 Control which phases should be run. See the full documentation for more details
 
-default value: (<Phase.explicit: 0>, <Phase.reuse: 1>, <Phase.generate: 2>, <Phase.shrink: 3>)
+Значение по умолчанию: (<Phase.explicit: 0>, <Phase.reuse: 1>, <Phase.generate: 2>, <Phase.shrink: 3>)
 
 > **print_blob**
 
@@ -133,19 +133,19 @@ Determines whether to print blobs after tests that can be used to reproduce fail
 
 See the documentation on @reproduce_failure for more details of this behaviour.
 
-default value: <PrintSettings.INFER: 1>
+Значение по умолчанию: <PrintSettings.INFER: 1>
 
 > **stateful\_step\_count**
 
 Number of steps to run a stateful program for before giving up on it breaking.
 
-default value: 50
+Значение по умолчанию: 50
 
 > **strict**
 
 Strict mode has been deprecated in favor of Python’s standard warnings controls. Ironically, enabling it is therefore an error - it only exists so that users get the right type of error!
 
-default value: False
+Значение по умолчанию: False
 
 Strict mode is deprecated and will go away in a future version of Hypothesis. To get the same behaviour, use warnings.simplefilter(‘error’, HypothesisDeprecationWarning).
 
@@ -153,12 +153,12 @@ Strict mode is deprecated and will go away in a future version of Hypothesis. To
 
 A list of health checks to disable.
 
-default value: ()
+Значение по умолчанию: ()
 
 > **timeout**
 Once this many seconds have passed, falsify will terminate even if it has not found many examples. This is a soft rather than a hard limit - Hypothesis won’t e.g. interrupt execution of the called function to stop it. If this value is <= 0 then no timeout will be applied.
 
-default value: 60
+Значение по умолчанию: 60
 
 The timeout setting is deprecated and will be removed in a future version of Hypothesis. To get the future behaviour set timeout=hypothesis.unlimited instead (which will remain valid for a further deprecation period after this setting has gone away).
 
@@ -168,13 +168,13 @@ Whether to use coverage information to improve Hypothesis’s ability to find bu
 
 You should generally leave this turned on unless your code performs poorly when run under coverage. If you turn it off, please file a bug report or add a comment to an existing one about the problem that prompted you to do so.
 
-default value: True
+Значение по умолчанию: True
 
 > **verbosity**
 
 Control the verbosity level of Hypothesis messages
 
-default value: Verbosity.normal
+Значение по умолчанию: Verbosity.normal
 
 
 ## Controlling What Runs ##
