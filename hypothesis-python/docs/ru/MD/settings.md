@@ -108,37 +108,37 @@ Hypothesis пытается использовать приемлемые зна
 
 > **min_satisfying\_examples**
 
-This doesn’t actually do anything, but remains for compatibility reasons.
+По факту ничего не делает, но остается по соображениям совместимости.
 
 Значение по умолчанию: not_set
 
-The min_satisfying_examples setting has been deprecated and disabled, due to overlap with the filter_too_much healthcheck and poor interaction with the max_examples setting.
+Параметр *min\_satisfying\_examples* устарел и отключен из-за перекрытия с параметром *filter\_too\_much healthcheck* и плохого взаимодействия с параметром *max_examples*.
 
 > **perform_health\_check**
 
-If set to True, Hypothesis will run a preliminary health check before attempting to actually execute your test.
+Если задано значение True, Hypothesis выполнит предварительную проверку работоспособности перед попыткой фактического выполнения теста.
 
 Значение по умолчанию: not_set
 
-This setting is deprecated, as perform_health_check=False duplicates the effect of suppress_health_check=HealthCheck.all(). Use that instead!
+Этот параметр устарел, так как *perform_health_check=False *дублирует эффект *suppress_health_check=HealthCheck.all()* Используйте его вместо этого!
 
 > **phases**
 
-Control which phases should be run. See the full documentation for more details
+Контролирует, какие фазы должны быть запущены. Дополнительную информацию смотрите в полной документации
 
 Значение по умолчанию: (<Phase.explicit: 0>, <Phase.reuse: 1>, <Phase.generate: 2>, <Phase.shrink: 3>)
 
 > **print_blob**
 
-Determines whether to print blobs after tests that can be used to reproduce failures.
+Определяет, следует ли печатать BLOB (большие двоичные объекты) после тестов, которые можно использовать для воспроизведения ошибок.
 
-See the documentation on @reproduce_failure for more details of this behaviour.
+Более подробную информацию об этом поведении смотрите в документации по `@reproduce_failure`.
 
 Значение по умолчанию: <PrintSettings.INFER: 1>
 
 > **stateful\_step\_count**
 
-Number of steps to run a stateful program for before giving up on it breaking.
+Количество шагов для запуска программы с отслеживанием состояния перед тем, как отказаться от её декомпозиции.
 
 Значение по умолчанию: 50
 
