@@ -53,21 +53,24 @@ Hypothesis пытается использовать приемлемые зна
 
 Размер исходных данных, используемых для генерации примеров. Если вам нужно создать действительно большие примеры, вы можете увеличить это значение, но это сделает ваши тесты медленнее.
 
-значение по умолчанию: 8192
+Значение по умолчанию: 8192
 
 > **database**
 
-An instance of hypothesis.database.ExampleDatabase that will be used to save examples to and load previous examples from. May be None in which case no storage will be used, :memory: for an in-memory database, or any path for a directory-based example database.
+Экземпляр hypothesis.database.ExampleDatabase, который будет использоваться для сохранения примеров и загрузки предыдущих примеров.  Может быть None, в этом случае хранилище не будет использоваться, *:memory:* для базы данных в памяти или любой путь для базы данных примеров на основе каталогов.
 
 Значение по умолчанию: (dynamically calculated)
 
 > **database_file**
 
-The file or directory location to save and load previously tried examples; :memory: for an in-memory cache or None to disable caching entirely.
+
+Расположение файла или каталога для сохранения и загрузки ранее опробованных примеров; *:memory:* для кэша в памяти или None, чтобы полностью отключить кэширование.
 
 Значение по умолчанию: (dynamically calculated)
 
 The database_file setting is deprecated in favor of the database setting, and will be removed in a future version. It only exists at all for complicated historical reasons and you should just use database instead.
+
+Параметр *database_file* устарел в пользу параметра *database* и будет удален в следующей версии. Он существует только для сложных исторических причин, и вам настоятельно рекомендуется использовать database вместо него.
 
 > **deadline**
 
