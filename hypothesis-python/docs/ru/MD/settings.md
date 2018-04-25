@@ -127,52 +127,58 @@ Control which phases should be run. See the full documentation for more details
 
 default value: (<Phase.explicit: 0>, <Phase.reuse: 1>, <Phase.generate: 2>, <Phase.shrink: 3>)
 
-print_blob
+> **print_blob**
+
 Determines whether to print blobs after tests that can be used to reproduce failures.
 
 See the documentation on @reproduce_failure for more details of this behaviour.
 
 default value: <PrintSettings.INFER: 1>
 
-stateful_step_count
+> **stateful\_step\_count**
+
 Number of steps to run a stateful program for before giving up on it breaking.
 
 default value: 50
 
-strict
+> **strict**
+
 Strict mode has been deprecated in favor of Python’s standard warnings controls. Ironically, enabling it is therefore an error - it only exists so that users get the right type of error!
 
 default value: False
 
 Strict mode is deprecated and will go away in a future version of Hypothesis. To get the same behaviour, use warnings.simplefilter(‘error’, HypothesisDeprecationWarning).
 
-suppress_health_check
+> **suppress\_health\_check**
+
 A list of health checks to disable.
 
 default value: ()
 
-timeout
+> **timeout**
 Once this many seconds have passed, falsify will terminate even if it has not found many examples. This is a soft rather than a hard limit - Hypothesis won’t e.g. interrupt execution of the called function to stop it. If this value is <= 0 then no timeout will be applied.
 
 default value: 60
 
 The timeout setting is deprecated and will be removed in a future version of Hypothesis. To get the future behaviour set timeout=hypothesis.unlimited instead (which will remain valid for a further deprecation period after this setting has gone away).
 
-use_coverage
+> **use_coverage**
+
 Whether to use coverage information to improve Hypothesis’s ability to find bugs.
 
 You should generally leave this turned on unless your code performs poorly when run under coverage. If you turn it off, please file a bug report or add a comment to an existing one about the problem that prompted you to do so.
 
 default value: True
 
-verbosity
+> **verbosity**
+
 Control the verbosity level of Hypothesis messages
 
 default value: Verbosity.normal
 
 
-Управление тем, что выполняется
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+## Controlling What Runs ##
+
 
 Hypothesis делит тесты на четыре логически различные фазы:
 
@@ -190,11 +196,9 @@ Hypothesis делит тесты на четыре логически разли
 
 Аргумент phases принимает коллекцию с любым их подмножеством. например, ``settings(phases=[Phase.generate, Phase.shrink])`` будет генерировать новые примеры и сжимать их, но не будет запускать явные примеры или повторно использовать предыдущие сбои, в то время как ``settings(phases=[Phase.explicit])`` будут выполняться только явные примеры.
 
-.. _verbose-output:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-Просмотр промежуточного результата
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+## Просмотр промежуточного результата ##
+
 
 Чтобы увидеть, что происходит, пока Hypothesis выполняет ваши тесты, вы можете включить в настройке Verbosity. Она работает, как с `~hypothesis.core.find`, так и с `@given`.
 
@@ -223,13 +227,12 @@ Hypothesis делит тесты на четыре логически разли
 
 При использовании pytest также может потребоваться `disable output capturing for passing tests` (запись выходных данных для прохождения тестов).	
 	
--------------------------
+
 Сборка settings objects
 -------------------------
 
 Settings могут быть созданы путем вызова `hypothesis.settings` с любым из доступных значений settings. Любые отсутствующие будут установлены по умолчанию:
 
-.. doctest::
 
     >>> from hypothesis import settings
     >>> settings().max_examples
@@ -239,7 +242,6 @@ Settings могут быть созданы путем вызова `hypothesis.
 
 В качестве первого аргумента можно также передать объект - "родительский" settings, и любые параметры, не указанные в качестве именованных аргументов, будут скопированы из родительских параметров:	
 	
-.. doctest::
 
     >>> parent = settings(max_examples=10)
     >>> child = settings(parent, deadline=200)
@@ -250,7 +252,7 @@ Settings могут быть созданы путем вызова `hypothesis.
     >>> child.deadline
     200
 
-----------------
+
 Настройка settings
 ----------------
 
@@ -258,7 +260,7 @@ Settings могут быть созданы путем вызова `hypothesis.
 
 Значения по умолчанию можно изменить с помощью профилей (См. следующий раздел), но их также можно переопределить локально с помощью объекта параметров в качестве `context manager`
 
-.. doctest::
+
 
     >>> with settings(max_examples=150):
     ...     print(settings.default.max_examples)
@@ -285,19 +287,17 @@ Settings могут быть созданы путем вызова `hypothesis.
 
 Внимание!: Если вы используете определение тестовых функции, которые не используют `@given` внутри блока контекста, они не будут использовать вложенные  параметры. Это происходит потому, что менеджер контекста влияет только на определение, а не на выполнение функции.			
 			
-.. _settings_profiles:
 
-~~~~~~~~~~~~~~~~~
-settings Profiles
-~~~~~~~~~~~~~~~~~
+
+
+## settings Profiles ##
+
 
 В зависимости от окружения могут потребоваться различные параметры по умолчанию. Например: во время разработки вы можете уменьшить количество примеров, чтобы ускорить тесты. Однако в среде CI может потребоваться больше примеров, чтобы с большей вероятностью найти ошибки.
 
 Hypothesis позволяет определить различные настройки профилей. Эти профили могут быть загружены в любое время.
 
 Загрузка профиля изменяет параметры по умолчанию, но не изменяет поведение тестов, которые явно изменяют параметры.
-
-.. doctest::
 
     >>> from hypothesis import settings
     >>> settings.register_profile("ci", max_examples=1000)
@@ -309,8 +309,6 @@ Hypothesis позволяет определить различные настр
 
 Вместо загрузки профиля и переопределения значений по умолчанию можно получить профили для определенных тестов.
 
-.. doctest::
-
     >>> with settings.get_profile("ci"):
     ...     print(settings().max_examples)
     ...
@@ -319,8 +317,6 @@ Hypothesis позволяет определить различные настр
 При необходимости можно определить переменную окружения для загрузки профиля. Это Рекомендуемый шаблон для выполнения тестов в CI. Приведенный ниже код должен выполняться в `conftest.py` или любой раздел setup/initialization комплекта тестов. Если эта переменная не определена, будут загружены значения по умолчанию, определенные Hypothesis.
 	
 
-.. doctest::
-
     >>> import os
     >>> from hypothesis import settings, Verbosity
     >>> settings.register_profile("ci", max_examples=1000)
@@ -328,16 +324,15 @@ Hypothesis позволяет определить различные настр
     >>> settings.register_profile("debug", max_examples=10, verbosity=Verbosity.verbose)
     >>> settings.load_profile(os.getenv(u'HYPOTHESIS_PROFILE', 'default'))
 
-Если вы используете плагин hypothesis pytest и ваши профили зарегистрированы вашим conftest вы можете загрузить один с опцией командной строки ``--hypothesis-profile``.
+Если вы используете плагин hypothesis pytest и ваши профили зарегистрированы вашим conftest вы можете загрузить один с опцией командной строки `--hypothesis-profile`.
 
-.. code:: bash
 
     $ pytest tests --hypothesis-profile
 
 
-~~~~~~~~
-Timeouts
-~~~~~~~~
+
+## Timeouts ##
+
 
 Функционал timeout Hypothesis является устаревшим и будет удален. На данный момент парметры timeout все еще могут быть назначены, и старое умолчание timeout в одну минуту остается.
 
