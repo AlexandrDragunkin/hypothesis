@@ -1,3 +1,4 @@
+
 settings
 =========
 
@@ -32,13 +33,131 @@ Hypothesis пытается использовать приемлемые зна
 
 Доступные установки
 -------------------
+
 `class hypothesis.settings(parent=None, **kwargs)`
 
-.. autoclass:: hypothesis.settings
-    :members:
-    :exclude-members: register_profile, get_profile, load_profile
 
 
+A settings object controls a variety of parameters that are used in falsification. These may control both the falsification strategy and the details of the data that is generated.
+
+Default values are picked up from the settings.default object and changes made there will be picked up in newly created settings.
+
+> ***classmethod define_setting(name, description, default, options=None, validator=None, show_default=True, future_default=not_set, deprecation_message=None, hide_repr=not_set)*** [[source]](https://hypothesis.readthedocs.io/en/latest/_modules/hypothesis/_settings.html#settings)
+
+Add a new setting.
+
+name is the name of the property that will be used to access the setting. This must be a valid python identifier.
+description will appear in the property’s docstring
+default is the default value. This may be a zero argument function in which case it is evaluated and its result is stored the first time it is accessed on any given settings object.
+buffer_size
+The size of the underlying data used to generate examples. If you need to generate really large examples you may want to increase this, but it will make your tests slower.
+
+default value: 8192
+
+database
+An instance of hypothesis.database.ExampleDatabase that will be used to save examples to and load previous examples from. May be None in which case no storage will be used, :memory: for an in-memory database, or any path for a directory-based example database.
+
+default value: (dynamically calculated)
+
+database_file
+The file or directory location to save and load previously tried examples; :memory: for an in-memory cache or None to disable caching entirely.
+
+default value: (dynamically calculated)
+
+The database_file setting is deprecated in favor of the database setting, and will be removed in a future version. It only exists at all for complicated historical reasons and you should just use database instead.
+
+deadline
+If set, a time in milliseconds (which may be a float to express smaller units of time) that each individual example (i.e. each time your test function is called, not the whole decorated test) within a test is not allowed to exceed. Tests which take longer than that may be converted into errors (but will not necessarily be if close to the deadline, to allow some variability in test run time).
+
+Set this to None to disable this behaviour entirely.
+
+In future this will default to 200. For now, a HypothesisDeprecationWarning will be emitted if you exceed that default deadline and have not explicitly set a deadline yourself.
+
+default value: not_set
+
+derandomize
+If this is True then hypothesis will run in deterministic mode where each falsification uses a random number generator that is seeded based on the hypothesis to falsify, which will be consistent across multiple runs. This has the advantage that it will eliminate any randomness from your tests, which may be preferable for some situations. It does have the disadvantage of making your tests less likely to find novel breakages.
+
+default value: False
+
+max_examples
+Once this many satisfying examples have been considered without finding any counter-example, falsification will terminate.
+
+default value: 100
+
+max_iterations
+This doesn’t actually do anything, but remains for compatibility reasons.
+
+default value: not_set
+
+The max_iterations setting has been disabled, as internal heuristics are more useful for this purpose than a user setting. It no longer has any effect.
+
+max_shrinks
+Once this many successful shrinks have been performed, Hypothesis will assume something has gone a bit wrong and give up rather than continuing to try to shrink the example.
+
+default value: 500
+
+min_satisfying_examples
+This doesn’t actually do anything, but remains for compatibility reasons.
+
+default value: not_set
+
+The min_satisfying_examples setting has been deprecated and disabled, due to overlap with the filter_too_much healthcheck and poor interaction with the max_examples setting.
+
+perform_health_check
+If set to True, Hypothesis will run a preliminary health check before attempting to actually execute your test.
+
+default value: not_set
+
+This setting is deprecated, as perform_health_check=False duplicates the effect of suppress_health_check=HealthCheck.all(). Use that instead!
+
+phases
+Control which phases should be run. See the full documentation for more details
+
+default value: (<Phase.explicit: 0>, <Phase.reuse: 1>, <Phase.generate: 2>, <Phase.shrink: 3>)
+
+print_blob
+Determines whether to print blobs after tests that can be used to reproduce failures.
+
+See the documentation on @reproduce_failure for more details of this behaviour.
+
+default value: <PrintSettings.INFER: 1>
+
+stateful_step_count
+Number of steps to run a stateful program for before giving up on it breaking.
+
+default value: 50
+
+strict
+Strict mode has been deprecated in favor of Python’s standard warnings controls. Ironically, enabling it is therefore an error - it only exists so that users get the right type of error!
+
+default value: False
+
+Strict mode is deprecated and will go away in a future version of Hypothesis. To get the same behaviour, use warnings.simplefilter(‘error’, HypothesisDeprecationWarning).
+
+suppress_health_check
+A list of health checks to disable.
+
+default value: ()
+
+timeout
+Once this many seconds have passed, falsify will terminate even if it has not found many examples. This is a soft rather than a hard limit - Hypothesis won’t e.g. interrupt execution of the called function to stop it. If this value is <= 0 then no timeout will be applied.
+
+default value: 60
+
+The timeout setting is deprecated and will be removed in a future version of Hypothesis. To get the future behaviour set timeout=hypothesis.unlimited instead (which will remain valid for a further deprecation period after this setting has gone away).
+
+use_coverage
+Whether to use coverage information to improve Hypothesis’s ability to find bugs.
+
+You should generally leave this turned on unless your code performs poorly when run under coverage. If you turn it off, please file a bug report or add a comment to an existing one about the problem that prompted you to do so.
+
+default value: True
+
+verbosity
+Control the verbosity level of Hypothesis messages
+
+default value: Verbosity.normal
 
 
 Управление тем, что выполняется
@@ -46,7 +165,7 @@ Hypothesis пытается использовать приемлемые зна
 
 Hypothesis делит тесты на четыре логически различные фазы:
 
-1. Выполнение явных примеров :ref:`provided with the @example decorator <providing-explicit-examples>`.
+1. Выполнение явных примеров `provided with the @example decorator`.
 2. Повторный запуск выборки ранее неудачных примеров для воспроизведения ранее замеченной ошибки.
 3. Создание новых примеров.
 4. Попытка сжать пример, найденный на этапах 2 или 3, до более управляемого (явные примеры не могут быть сжаты).
@@ -91,7 +210,7 @@ Hypothesis делит тесты на четыре логически разли
 
 Четыре уровня: quiet (тихий), normal (нормальный), verbose (подробный) и debug (отладочный). normal-это значение по умолчанию, в то время как в quiet режиме Hypothesis не будет ничего печатать, даже окончательный пример фальсификации. debug по сути это то тот же  verbose, но немного подробнее. Вы, наверное, не хотите этого.
 
-При использовании pytest также может потребоваться :doc:`disable output capturing for passing tests <pytest:capture>` (запись выходных данных для прохождения тестов).	
+При использовании pytest также может потребоваться `disable output capturing for passing tests` (запись выходных данных для прохождения тестов).	
 	
 -------------------------
 Сборка settings objects
@@ -126,7 +245,7 @@ Settings могут быть созданы путем вызова `hypothesis.
 
 В любой момент в вашей программе есть текущие настройки по умолчанию, доступные в качестве ``settings.default``. Помимо того, что объект settings сам по себе, все вновь созданные объекты settings, которые явно не основаны на других настройках, основаны на значении по умолчанию, поэтому будут наследовать любые значения, которые явно не установлены из него.
 
-Значения по умолчанию можно изменить с помощью профилей (См. следующий раздел), но их также можно переопределить локально с помощью объекта параметров в качестве :ref:`context manager <python:context-managers>`
+Значения по умолчанию можно изменить с помощью профилей (См. следующий раздел), но их также можно переопределить локально с помощью объекта параметров в качестве `context manager`
 
 .. doctest::
 
@@ -202,7 +321,7 @@ Hypothesis позволяет определить различные настр
 
 .. code:: bash
 
-    $ pytest tests --hypothesis-profile <profile-name>
+    $ pytest tests --hypothesis-profile
 
 
 ~~~~~~~~
