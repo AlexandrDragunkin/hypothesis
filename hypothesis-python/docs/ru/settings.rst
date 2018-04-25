@@ -210,9 +210,9 @@ Hypothesis позволяет определить различные настр
 Timeouts
 ~~~~~~~~
 
-Функционал timeout Hypothesis является устаревшим и будет удален. На данный момент парметры timeout все еще может быть назначены, и старое умолчание таймаут одна минута остается.
+Функционал timeout Hypothesis является устаревшим и будет удален. На данный момент парметры timeout все еще могут быть назначены, и старое умолчание timeout в одну минуту остается.
 
-Если вы хотите в будущем использовать свой код, вы можете оценить будущее поведение, установив timeout в ``hypothesis.unlimited``.
+Если вы хотите в будущем использовать свой код, вы можете оценить его поведение в будущем, установив timeout в ``hypothesis.unlimited``.
 
 .. code:: python
 
@@ -224,18 +224,9 @@ Timeouts
     def test_something_slow(i):
         ...
 
-This will cause your code to run until it hits the normal Hypothesis example
-limits, regardless of how long it takes. ``timeout=unlimited`` will remain a
-valid setting after the timeout functionality has been deprecated (but will
-then have its own deprecation cycle).
+Это приведет к тому, что ваш код будет выполняться до тех пор, пока он не подберет обычный пример в рамках Hypothesis, независимо от того, сколько времени это займет. ``timeout=unlimited`` останется допустимым параметром после отказа от функции timeout (но затем будет иметь свой собственный цикл старения).
 
-There is however now a timing related health check which is designed to catch
-tests that run for ages by accident. If you really want your test to run
-forever, the following code will enable that:
-
-Это приведет к тому, что ваш код будет выполняться до тех пор, пока он не достигнет нормальных пределов примера Hypothesis, независимо от того, сколько времени это займет. ``timeout=unlimited`` останется допустимым параметром после отказа от функции timeout (но затем будет иметь свой собственный цикл старения).
-
-Тем не менее, теперь существует проверка работоспособности, связанная с сроками и health check, который предназначен, чтобы отловить тесты, которые  готовы работать веками. Если вы действительно хотите, чтобы ваш тест выполнялся вечно, следующий код позволит это:
+Тем не менее, теперь существует проверка работоспособности, связанная со сроками и health check, который предназначен, чтобы отловить тесты, которые  готовы работать веками. Если вы действительно хотите, чтобы ваш тест выполнялся вечно, следующий код позволит это:
 
 .. code:: python
 
