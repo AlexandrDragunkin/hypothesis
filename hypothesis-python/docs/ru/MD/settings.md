@@ -144,11 +144,12 @@ Hypothesis пытается использовать приемлемые зна
 
 > **strict**
 
-Strict mode has been deprecated in favor of Python’s standard warnings controls. Ironically, enabling it is therefore an error - it only exists so that users get the right type of error!
+*strict* (строгий) режим был объявлен устаревшим в пользу стандартных  предупреждений Python. По иронии судьбы, включение этой функции является ошибкой - она ​​существует только для того, чтобы пользователи получали правильный тип ошибок!
 
 Значение по умолчанию: False
 
-Strict mode is deprecated and will go away in a future version of Hypothesis. To get the same behaviour, use warnings.simplefilter(‘error’, HypothesisDeprecationWarning).
+Строгий режим устарел и исчезнет в будущей версии Hypothesis. Чтобы получить такое же поведение, используйте *warnings.simplefilter(‘error’, HypothesisDeprecationWarning)*.
+
 
 > **suppress\_health\_check**
 
