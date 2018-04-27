@@ -1,5 +1,5 @@
 =========
-Настройки
+settings
 =========
 
 Hypothesis пытается использовать приемлемые значения в умолчаниях для своего поведения, но иногда этого недостаточно, и вам требуется настроить его.
@@ -61,21 +61,13 @@ Hypothesis делит тесты на четыре логически разли
 
 Аргумент phases принимает коллекцию с любым их подмножеством. например, ``settings(phases=[Phase.generate, Phase.shrink])`` будет генерировать новые примеры и сжимать их, но не будет запускать явные примеры или повторно использовать предыдущие сбои, в то время как ``settings(phases=[Phase.explicit])`` будут выполняться только явные примеры.
 
-The phases argument accepts a collection with any subset of these. e.g.
-``settings(phases=[Phase.generate, Phase.shrink])`` will generate new examples
-and shrink them, but will not run explicit examples or reuse previous failures,
-while ``settings(phases=[Phase.explicit])`` will only run the explicit
-examples.
-
 .. _verbose-output:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-Seeing intermediate result
+Просмотр промежуточного результата
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To see what's going on while Hypothesis runs your tests, you can turn
-up the verbosity setting. This works with both :func:`~hypothesis.core.find`
-and :func:`@given <hypothesis.given>`.
+Чтобы увидеть, что происходит, пока Hypothesis выполняет ваши тесты, вы можете включить в настройке Verbosity. Она работает, как с :func:`~hypothesis.core.find`, так и с :func:`@given <hypothesis.given>`.
 
 .. doctest::
 
@@ -98,20 +90,15 @@ and :func:`@given <hypothesis.given>`.
     Shrunk example to [1]
     [1]
 
-The four levels are quiet, normal, verbose and debug. normal is the default,
-while in quiet mode Hypothesis will not print anything out, not even the final
-falsifying example. debug is basically verbose but a bit more so. You probably
-don't want it.
+Четыре уровня: quiet (тихий), normal (нормальный), verbose (подробный) и debug (отладочный). normal-это значение по умолчанию, в то время как в quiet режиме Hypothesis не будет ничего печатать, даже окончательный пример фальсификации. debug по сути это то тот же  verbose, но немного подробнее. Вы, наверное, не хотите этого.
 
-If you are using :pypi:`pytest`, you may also need to
-:doc:`disable output capturing for passing tests <pytest:capture>`.
-
+При использовании pytest также может потребоваться :doc:`disable output capturing for passing tests <pytest:capture>` (запись выходных данных для прохождения тестов).	
+	
 -------------------------
-Building settings objects
+Сборка settings objects
 -------------------------
 
-Settings can be created by calling :class:`~hypothesis.settings` with any of the available settings
-values. Any absent ones will be set to defaults:
+Settings могут быть созданы путем вызова :class:`~hypothesis.settings` с любым из доступных значений settings. Любые отсутствующие будут установлены по умолчанию:
 
 .. doctest::
 
@@ -121,10 +108,8 @@ values. Any absent ones will be set to defaults:
     >>> settings(max_examples=10).max_examples
     10
 
-You can also pass a 'parent' settings object as the first argument,
-and any settings you do not specify as keyword arguments will be
-copied from the parent settings:
-
+В качестве первого аргумента можно также передать объект - "родительский" settings, и любые параметры, не указанные в качестве именованных аргументов, будут скопированы из родительских параметров:	
+	
 .. doctest::
 
     >>> parent = settings(max_examples=10)
@@ -137,18 +122,12 @@ copied from the parent settings:
     200
 
 ----------------
-Default settings
+Настройка settings
 ----------------
 
-At any given point in your program there is a current default settings,
-available as ``settings.default``. As well as being a settings object in its own
-right, all newly created settings objects which are not explicitly based off
-another settings are based off the default, so will inherit any values that are
-not explicitly set from it.
+В любой момент в вашей программе есть текущие настройки по умолчанию, доступные в качестве ``settings.default``. Помимо того, что объект settings сам по себе, все вновь созданные объекты settings, которые явно не основаны на других настройках, основаны на значении по умолчанию, поэтому будут наследовать любые значения, которые явно не установлены из него.
 
-You can change the defaults by using profiles (see next section), but you can
-also override them locally by using a settings object as a :ref:`context manager <python:context-managers>`
-
+Значения по умолчанию можно изменить с помощью профилей (См. следующий раздел), но их также можно переопределить локально с помощью объекта параметров в качестве :ref:`context manager <python:context-managers>`
 
 .. doctest::
 
@@ -160,9 +139,9 @@ also override them locally by using a settings object as a :ref:`context manager
     >>> settings().max_examples
     100
 
-Note that after the block exits the default is returned to normal.
+Обратите внимание, что после выхода из блока значение по умолчанию возвращается в нормальное состояние.
 
-You can use this by nesting test definitions inside the context:
+Это можно использовать, вложив определения тестов в контекст:
 
 .. code:: python
 
@@ -173,30 +152,21 @@ You can use this by nesting test definitions inside the context:
         def test_this_thoroughly(x):
             pass
 
-All settings objects created or tests defined inside the block will inherit their
-defaults from the settings object used as the context. You can still override them
-with custom defined settings of course.
+Все созданные объекты settings или тесты, определенные внутри блока, наследуют значения по умолчанию от объекта settings, используемого в качестве контекста. Вы, конечно, все еще можете переопределить их с помощью пользовательских настроек.
 
-Warning: If you use define test functions which don't use :func:`@given <hypothesis.given>`
-inside a context block, these will not use the enclosing settings. This is because the context
-manager only affects the definition, not the execution of the function.
-
+Внимание!: Если вы используете определение тестовых функции, которые не используют :func:`@given <hypothesis.given>` внутри блока контекста, они не будут использовать вложенные  параметры. Это происходит потому, что менеджер контекста влияет только на определение, а не на выполнение функции.			
+			
 .. _settings_profiles:
 
 ~~~~~~~~~~~~~~~~~
 settings Profiles
 ~~~~~~~~~~~~~~~~~
 
-Depending on your environment you may want different default settings.
-For example: during development you may want to lower the number of examples
-to speed up the tests. However, in a CI environment you may want more examples
-so you are more likely to find bugs.
+В зависимости от окружения могут потребоваться различные параметры по умолчанию. Например: во время разработки вы можете уменьшить количество примеров, чтобы ускорить тесты. Однако в среде CI может потребоваться больше примеров, чтобы с большей вероятностью найти ошибки.
 
-Hypothesis allows you to define different settings profiles. These profiles
-can be loaded at any time.
+Hypothesis позволяет определить различные настройки профилей. Эти профили могут быть загружены в любое время.
 
-Loading a profile changes the default settings but will not change the behavior
-of tests that explicitly change the settings.
+Загрузка профиля изменяет параметры по умолчанию, но не изменяет поведение тестов, которые явно изменяют параметры.
 
 .. doctest::
 
@@ -208,8 +178,7 @@ of tests that explicitly change the settings.
     >>> settings().max_examples
     1000
 
-Instead of loading the profile and overriding the defaults you can retrieve profiles for
-specific tests.
+Вместо загрузки профиля и переопределения значений по умолчанию можно получить профили для определенных тестов.
 
 .. doctest::
 
@@ -218,10 +187,8 @@ specific tests.
     ...
     1000
 
-Optionally, you may define the environment variable to load a profile for you.
-This is the suggested pattern for running your tests on CI.
-The code below should run in a `conftest.py` or any setup/initialization section of your test suite.
-If this variable is not defined the Hypothesis defined defaults will be loaded.
+При необходимости можно определить переменную окружения для загрузки профиля. Это Рекомендуемый шаблон для выполнения тестов в CI. Приведенный ниже код должен выполняться в `conftest.py` или любой раздел setup/initialization комплекта тестов. Если эта переменная не определена, будут загружены значения по умолчанию, определенные Hypothesis.
+	
 
 .. doctest::
 
@@ -232,8 +199,7 @@ If this variable is not defined the Hypothesis defined defaults will be loaded.
     >>> settings.register_profile("debug", max_examples=10, verbosity=Verbosity.verbose)
     >>> settings.load_profile(os.getenv(u'HYPOTHESIS_PROFILE', 'default'))
 
-If you are using the hypothesis pytest plugin and your profiles are registered
-by your conftest you can load one with the command line option ``--hypothesis-profile``.
+Если вы используете плагин hypothesis pytest и ваши профили зарегистрированы вашим conftest вы можете загрузить один с опцией командной строки ``--hypothesis-profile``.
 
 .. code:: bash
 
@@ -244,12 +210,9 @@ by your conftest you can load one with the command line option ``--hypothesis-pr
 Timeouts
 ~~~~~~~~
 
-The timeout functionality of Hypothesis is being deprecated, and will
-eventually be removed. For the moment, the timeout setting can still be set
-and the old default timeout of one minute remains.
+Функционал timeout Hypothesis является устаревшим и будет удален. На данный момент парметры timeout все еще могут быть назначены, и старое умолчание timeout в одну минуту остается.
 
-If you want to future proof your code you can get
-the future behaviour by setting it to the value ``hypothesis.unlimited``.
+Если вы хотите в будущем использовать свой код, вы можете оценить его поведение в будущем, установив timeout в ``hypothesis.unlimited``.
 
 .. code:: python
 
@@ -261,14 +224,9 @@ the future behaviour by setting it to the value ``hypothesis.unlimited``.
     def test_something_slow(i):
         ...
 
-This will cause your code to run until it hits the normal Hypothesis example
-limits, regardless of how long it takes. ``timeout=unlimited`` will remain a
-valid setting after the timeout functionality has been deprecated (but will
-then have its own deprecation cycle).
+Это приведет к тому, что ваш код будет выполняться до тех пор, пока он не подберет обычный пример в рамках Hypothesis, независимо от того, сколько времени это займет. ``timeout=unlimited`` останется допустимым параметром после отказа от функции timeout (но затем будет иметь свой собственный цикл старения).
 
-There is however now a timing related health check which is designed to catch
-tests that run for ages by accident. If you really want your test to run
-forever, the following code will enable that:
+Тем не менее, теперь существует проверка работоспособности, связанная со сроками и health check, который предназначен, чтобы отловить тесты, которые  готовы работать веками. Если вы действительно хотите, чтобы ваш тест выполнялся вечно, следующий код позволит это:
 
 .. code:: python
 
