@@ -64,6 +64,22 @@
 
 Где явно не исключаются границы, все варианты бесконечности, - *infinity* и *NaN* являются возможными значениями, генерируемыми этой стратегией.
 
-Examples from this strategy have a complicated and hard to explain shrinking behaviour, but it tries to improve “human readability”. Finite numbers will be preferred to infinity and infinity will be preferred to NaN.
+Примеры из этой стратегии сложны и трудны для объяснения сокращающегося поведения, но эта стратегия пытается улучшить «удобочитаемость человеком». *Конечные числа* будут предпочтительнее *infinity*, и *infinity* будет предпочтительнее *NaN*.
 
-Примеры из этой стратегии сложны и трудны для объяснения сокращающегося поведения, но она пытается улучшить «удобочитаемость человеком». Конечные числа будут предпочтительнее infinity, и infinity будет предпочтительнее NaN.
+> **hypothesis.strategies.tuples(*args)**[[source](https://hypothesis.readthedocs.io/en/latest/_modules/hypothesis/strategies.html#tuples)]
+
+Return a strategy which generates a tuple of the same length as args by generating the value at index i from args[i].
+
+e.g. tuples(integers(), integers()) would generate a tuple of length two with both values an integer.
+
+Examples from this strategy shrink by shrinking their component parts.
+
+> **hypothesis.strategies.sampled_from(elements)**[[source](https://hypothesis.readthedocs.io/en/latest/_modules/hypothesis/strategies.html#sampled_from)]
+> 
+Returns a strategy which generates any value present in elements.
+
+Note that as with just(), values will not be copied and thus you should be careful of using mutable data.
+
+sampled_from supports ordered collections, as well as Enum objects. Flag objects may also generate any combination of their members.
+
+Examples from this strategy shrink by replacing them with values earlier in the list. So e.g. sampled_from((10, 1)) will shrink by trying to replace 1 values with 10, and sampled_from((1, 10)) will shrink by trying to replace 10 values with 1.
