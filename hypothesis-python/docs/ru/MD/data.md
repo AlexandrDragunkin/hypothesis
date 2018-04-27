@@ -8,18 +8,12 @@
 Функции для построения стратегий доступны в модуле hypothesis.strategies. Основные функции из него заключаются в следующем:
 
 > **hypothesis.strategies.nothing()**[[source](https://hypothesis.readthedocs.io/en/latest/_modules/hypothesis/strategies.html#nothing)]
+
 Эта стратегия никогда не будет успешно использовать значение и всегда будет отклоняться при попытке привлечь.
 
 Примеры из этой стратегии не сокращаются (потому что их нет).
 
 > **hypothesis.strategies.just(value)**[[source](https://hypothesis.readthedocs.io/en/latest/_modules/hypothesis/strategies.html#just)]
-Return a strategy which only generates value.
-
-Note: value is not copied. Be wary of using mutable values.
-
-If value is the result of a callable, you can use builds(callable) instead of just(callable()) to get a fresh value each time.
-
-Examples from this strategy do not shrink (because there is only one).
 
 Возвращает стратегию, которая генерирует только значение.
 
@@ -27,9 +21,29 @@ Examples from this strategy do not shrink (because there is only one).
 
 Если value является результатом callable, вы можете использовать `builds(callable)` вместо `just(callable())`, чтобы каждый раз получать новое значение.
 
-Примеры из этой стратегии не сжимаются (потому что существует в единственном экземпляре).
+Примеры из этой стратегии не сжимаются (потому что существует один в единственном экземпляре).
 
-hypothesis.strategies.none()[source]
-Return a strategy which only generates None.
+> **hypothesis.strategies.none()**[[source](https://hypothesis.readthedocs.io/en/latest/_modules/hypothesis/strategies.html#none)
 
-Examples from this strategy do not shrink (because there is only one).
+Возвращает стратегию, которая генерирует только None.
+
+Примеры из этой стратегии не сжимаются (потому что существует один в единственном экземпляре).
+
+> **hypothesis.strategies.one_of(*args)**[[source](https://hypothesis.readthedocs.io/en/latest/_modules/hypothesis/strategies.html#one_of)
+
+Возвращает стратегию, которая генерирует значения из любой стратегии аргументов.
+
+Это может быть вызвано с одним iterable аргументом вместо нескольких аргументов стратегии. В этом случае `one_of(x)` и `one_of(*x)` эквивалентны.
+
+Примеры из этой стратегии, как правило, сокращаются до тех, которые исходят из стратегий ранее в списке, а затем сокращаются в соответствии с поведением стратегии, которая их создала. Для того, чтобы получить хорошее сокращающееся поведение, попробуйте поставить более простые стратегии в первую очередь. *Например:* `one_of(none(), text())` лучше, чем `one_of(text(), none())`.
+
+Это особенно важно при использовании рекурсивных стратегий. *Например:* `x = st.deferred(lambda: st.none() | st.tuples(x, x))` будет хорошо сжиматься, `but x = st.deferred(lambda: st.tuples(x, x) | st.none())` будет сокращаться действительно очень плохо.
+
+> **hypothesis.strategies.integers(min_value=None, max_value=None)**[[source](https://hypothesis.readthedocs.io/en/latest/_modules/hypothesis/strategies.html#integers)
+
+Возвращает стратегию, которая генерирует целые числа (в Python 2 это могут быть ints или longs).
+
+Если `min_value` не равно *None*, то все значения будут `>= min_value`. Если `max_value` не равно *None*, то все значения будут `<= max_value`
+
+Примеры из этой стратегии будут стремиться к нулю, а отрицательные значения также будут сокращаться до положительных (т.е. `-n` может быть заменено на `+n`).
+
