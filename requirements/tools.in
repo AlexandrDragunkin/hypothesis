@@ -1,6 +1,7 @@
 flake8
 flake8-docstrings
 isort
+mypy
 pip-tools
 pyformat
 pytest
@@ -11,5 +12,8 @@ tox
 twine
 attrs
 coverage
+python-dateutil
 pyupio
 django
+numpy
+IPython

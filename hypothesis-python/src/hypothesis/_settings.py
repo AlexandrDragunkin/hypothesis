@@ -30,13 +30,17 @@ from enum import Enum, IntEnum, unique
 
 import attr
 
-from hypothesis.errors import InvalidArgument, HypothesisDeprecationWarning
+from hypothesis.errors import InvalidState, InvalidArgument, \
+    HypothesisDeprecationWarning
 from hypothesis.internal.compat import text_type
 from hypothesis.utils.conventions import UniqueIdentifier, not_set
 from hypothesis.internal.reflection import proxies, \
     get_pretty_function_description
 from hypothesis.internal.validation import try_convert
 from hypothesis.utils.dynamicvariables import DynamicVariable
+
+if False:
+    from typing import Any, Dict, List  # noqa
 
 __all__ = [
     'settings',
@@ -46,7 +50,7 @@ __all__ = [
 unlimited = UniqueIdentifier('unlimited')
 
 
-all_settings = {}
+all_settings = {}  # type: Dict[str, Setting]
 
 
 class settingsProperty(object):
@@ -113,7 +117,9 @@ class settingsMeta(type):
         default_variable.value = value
 
 
-class settings(settingsMeta('settings', (object,), {})):
+class settings(
+    settingsMeta('settings', (object,), {})  # type: ignore
+):
     """A settings object controls a variety of parameters that are used in
     falsification. These may control both the falsification strategy and the
     details of the data that is generated.
@@ -126,7 +132,7 @@ class settings(settingsMeta('settings', (object,), {})):
         '_construction_complete', 'storage'
     ]
     __definitions_are_locked = False
-    _profiles = {}
+    _profiles = {}  # type: dict
 
     def __getattr__(self, name):
         if name in all_settings:
@@ -135,6 +141,7 @@ class settings(settingsMeta('settings', (object,), {})):
             raise AttributeError('settings has no attribute %s' % (name,))
 
     def __init__(self, parent=None, **kwargs):
+        # type: (settings, **Any) -> None
         if (
             kwargs.get('database', not_set) is not_set and
             kwargs.get('database_file', not_set) is not not_set
@@ -238,7 +245,7 @@ class settings(settingsMeta('settings', (object,), {})):
         return test_to_use
 
     @classmethod
-    def define_setting(
+    def _define_setting(
         cls, name, description, default, options=None,
         validator=None, show_default=True, future_default=not_set,
         deprecation_message=None, hide_repr=not_set,
@@ -253,7 +260,6 @@ class settings(settingsMeta('settings', (object,), {})):
           the first time it is accessed on any given settings object.
         """
         if settings.__definitions_are_locked:
-            from hypothesis.errors import InvalidState
             raise InvalidState(
                 'settings have been locked and may no longer be defined.'
             )
@@ -321,6 +327,7 @@ class settings(settingsMeta('settings', (object,), {})):
 
     @staticmethod
     def register_profile(name, parent=None, **kwargs):
+        # type: (str, settings, **Any) -> None
         """Registers a collection of values to be used as a settings profile.
 
         Settings profiles can be loaded by name - for example, you might
@@ -349,6 +356,7 @@ class settings(settingsMeta('settings', (object,), {})):
 
     @staticmethod
     def get_profile(name):
+        # type: (str) -> settings
         """Return the profile with the given name."""
         if not isinstance(name, (str, text_type)):
             note_deprecation('name=%r must be a string' % (name,))
@@ -359,6 +367,7 @@ class settings(settingsMeta('settings', (object,), {})):
 
     @staticmethod
     def load_profile(name):
+        # type: (str) -> None
         """Loads in the settings defined in the profile provided.
 
         If the profile does not exist, InvalidArgument will be raised.
@@ -383,7 +392,7 @@ class Setting(object):
     hide_repr = attr.ib()
 
 
-settings.define_setting(
+settings._define_setting(
     'min_satisfying_examples',
     default=not_set,
     description="""
@@ -396,7 +405,7 @@ max_examples setting.
 """
 )
 
-settings.define_setting(
+settings._define_setting(
     'max_examples',
     default=100,
     description="""
@@ -405,7 +414,7 @@ counter-example, falsification will terminate.
 """
 )
 
-settings.define_setting(
+settings._define_setting(
     'max_iterations',
     default=not_set,
     description="""
@@ -417,7 +426,7 @@ useful for this purpose than a user setting.  It no longer has any effect.
 """
 )
 
-settings.define_setting(
+settings._define_setting(
     'buffer_size',
     default=8 * 1024,
     description="""
@@ -428,7 +437,7 @@ your tests slower.
 )
 
 
-settings.define_setting(
+settings._define_setting(
     'max_shrinks',
     default=500,
     description="""
@@ -446,7 +455,7 @@ def _validate_timeout(n):
         return n
 
 
-settings.define_setting(
+settings._define_setting(
     'timeout',
     default=60,
     description="""
@@ -467,7 +476,7 @@ setting has gone away).
     validator=_validate_timeout
 )
 
-settings.define_setting(
+settings._define_setting(
     'derandomize',
     default=False,
     description="""
@@ -481,7 +490,7 @@ find novel breakages.
 """
 )
 
-settings.define_setting(
+settings._define_setting(
     'strict',
     default=os.getenv('HYPOTHESIS_STRICT_MODE') == 'true',
     description="""
@@ -498,11 +507,11 @@ warnings.simplefilter('error', HypothesisDeprecationWarning).
 )
 
 
-def _validate_database(db, __from_db_file=False):
+def _validate_database(db, _from_db_file=False):
     from hypothesis.database import ExampleDatabase
     if db is None or isinstance(db, ExampleDatabase):
         return db
-    if __from_db_file or db is not_set:
+    if _from_db_file or db is not_set:
         return ExampleDatabase(db)
     raise InvalidArgument(
         'Arguments to the database setting must be None or an instance of '
@@ -512,7 +521,7 @@ def _validate_database(db, __from_db_file=False):
     )
 
 
-settings.define_setting(
+settings._define_setting(
     'database',
     default=not_set,
     show_default=False,
@@ -525,7 +534,7 @@ database, or any path for a directory-based example database.
     validator=_validate_database,
 )
 
-settings.define_setting(
+settings._define_setting(
     'database_file',
     default=not_set,
     show_default=False,
@@ -533,7 +542,7 @@ settings.define_setting(
 The file or directory location to save and load previously tried examples;
 `:memory:` for an in-memory cache or None to disable caching entirely.
 """,
-    validator=lambda f: _validate_database(f, __from_db_file=True),
+    validator=lambda f: _validate_database(f, _from_db_file=True),
     deprecation_message="""
 The `database_file` setting is deprecated in favor of the `database`
 setting, and will be removed in a future version.  It only exists at
@@ -563,6 +572,7 @@ class HealthCheck(Enum):
 
     @classmethod
     def all(cls):
+        # type: () -> List[HealthCheck]
         bad = (HealthCheck.exception_in_generation, HealthCheck.random_module)
         return [h for h in list(cls) if h not in bad]
 
@@ -618,6 +628,7 @@ class Verbosity(IntEnum):
 
     @staticmethod
     def _get_default():
+        # type: () -> Verbosity
         var = os.getenv('HYPOTHESIS_VERBOSITY_LEVEL')
         if var is not None:  # pragma: no cover
             try:
@@ -638,7 +649,7 @@ class Verbosity(IntEnum):
         return 'Verbosity.%s' % (self.name,)
 
 
-settings.define_setting(
+settings._define_setting(
     'verbosity',
     options=tuple(Verbosity),
     default=Verbosity._get_default(),
@@ -656,7 +667,7 @@ def _validate_phases(phases):
     return phases
 
 
-settings.define_setting(
+settings._define_setting(
     'phases',
     default=tuple(Phase),
     description=(
@@ -666,7 +677,7 @@ settings.define_setting(
     validator=_validate_phases,
 )
 
-settings.define_setting(
+settings._define_setting(
     name='stateful_step_count',
     default=50,
     description="""
@@ -674,7 +685,7 @@ Number of steps to run a stateful program for before giving up on it breaking.
 """
 )
 
-settings.define_setting(
+settings._define_setting(
     'perform_health_check',
     default=not_set,
     description=u"""
@@ -709,14 +720,14 @@ def validate_health_check_suppressions(suppressions):
     return suppressions
 
 
-settings.define_setting(
+settings._define_setting(
     'suppress_health_check',
     default=(),
     description="""A list of health checks to disable.""",
     validator=validate_health_check_suppressions
 )
 
-settings.define_setting(
+settings._define_setting(
     'deadline',
     default=not_set,
     description=u"""
@@ -735,7 +746,7 @@ deadline and have not explicitly set a deadline yourself.
 """
 )
 
-settings.define_setting(
+settings._define_setting(
     'use_coverage',
     default=True,
     description="""
@@ -771,7 +782,7 @@ class PrintSettings(Enum):
     """Always print a blob on failure."""
 
 
-settings.define_setting(
+settings._define_setting(
     'print_blob',
     default=PrintSettings.INFER,
     description="""
@@ -787,6 +798,7 @@ settings.lock_further_definitions()
 
 
 def note_deprecation(message, s=None):
+    # type: (str, settings) -> None
     if s is None:
         s = settings.default
     assert s is not None

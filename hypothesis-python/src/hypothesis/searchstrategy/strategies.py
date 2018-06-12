@@ -22,14 +22,28 @@ from collections import defaultdict
 import hypothesis.internal.conjecture.utils as cu
 from hypothesis.errors import NoExamples, NoSuchExample, Unsatisfiable, \
     UnsatisfiedAssumption
-from hypothesis.control import assume, reject, _current_build_context
+from hypothesis.control import assume, _current_build_context
 from hypothesis._settings import note_deprecation
 from hypothesis.internal.compat import hrange, bit_length
+from hypothesis.internal.coverage import check_function
 from hypothesis.utils.conventions import UniqueIdentifier
 from hypothesis.internal.lazyformat import lazyformat
 from hypothesis.internal.reflection import get_pretty_function_description
+from hypothesis.internal.validation import check_type
 from hypothesis.internal.conjecture.utils import LABEL_MASK, \
     combine_labels, calc_label_from_cls, calc_label_from_name
+
+try:
+    from random import Random  # noqa
+    from typing import List, Callable, TypeVar, Generic, Optional  # noqa
+    Ex = TypeVar('Ex', covariant=True)
+    T = TypeVar('T')
+
+    from hypothesis.internal.conjecture.data import ConjectureData  # noqa
+
+except ImportError:  # pragma: no cover
+    Ex = 'key'  # type: ignore
+    Generic = {Ex: object}  # type: ignore
 
 calculating = UniqueIdentifier('calculating')
 
@@ -45,7 +59,7 @@ def one_of_strategies(xs):
     return OneOfStrategy(xs)
 
 
-class SearchStrategy(object):
+class SearchStrategy(Generic[Ex]):
     """A SearchStrategy is an object that knows how to explore data of a given
     type.
 
@@ -70,7 +84,7 @@ class SearchStrategy(object):
         The problem is that for properties that depend on each other, a naive
         calculation strategy may hit infinite recursion. Consider for example
         the property is_empty. A strategy defined as x = st.deferred(lambda x)
-        is certainly empty (in order ot draw a value from x we would have to
+        is certainly empty (in order to draw a value from x we would have to
         draw a value from x, for which we would have to draw a value from x,
         ...), but in order to calculate it the naive approach would end up
         calling x.is_empty in order to calculate x.is_empty in order to etc.
@@ -138,12 +152,27 @@ class SearchStrategy(object):
 
                 # We track which strategies use which in the course of
                 # calculating their property value. If A ever uses B in
-                # the course of calculating its value, then whenveer the
+                # the course of calculating its value, then whenever the
                 # value of B changes we might need to update the value of
                 # A.
                 listeners = defaultdict(set)
             else:
                 needs_update = None
+
+            def recur2(strat):
+                def recur_inner(other):
+                    try:
+                        return forced_value(other)
+                    except AttributeError:
+                        pass
+                    listeners[other].add(strat)
+                    try:
+                        return mapping[other]
+                    except KeyError:
+                        needs_update.add(other)
+                        mapping[other] = default
+                        return default
+                return recur_inner
 
             count = 0
             seen = set()
@@ -167,20 +196,7 @@ class SearchStrategy(object):
                 to_update = needs_update
                 needs_update = set()
                 for strat in to_update:
-                    def recur(other):
-                        try:
-                            return forced_value(other)
-                        except AttributeError:
-                            pass
-                        listeners[other].add(strat)
-                        try:
-                            return mapping[other]
-                        except KeyError:
-                            needs_update.add(other)
-                            mapping[other] = default
-                            return default
-
-                    new_value = getattr(strat, calculation)(recur)
+                    new_value = getattr(strat, calculation)(recur2(strat))
                     if new_value != mapping[strat]:
                         needs_update.update(listeners[strat])
                         mapping[strat] = new_value
@@ -226,6 +242,7 @@ class SearchStrategy(object):
         return False
 
     def example(self, random=None):
+        # type: (Random) -> Ex
         """Provide an example of the sort of value that this strategy
         generates. This is biased to be slightly simpler than is typical for
         values from this strategy, for clarity purposes.
@@ -268,7 +285,7 @@ class SearchStrategy(object):
         # Conjecture will always try the zero example first. This would result
         # in us producing the same example each time, which is boring, so we
         # deliberately skip the first example it feeds us.
-        first = []
+        first = []  # type: list
 
         def condition(x):
             if first:
@@ -297,6 +314,7 @@ class SearchStrategy(object):
             )
 
     def map(self, pack):
+        # type: (Callable[[Ex], T]) -> SearchStrategy[T]
         """Returns a new strategy that generates values by generating a value
         from this strategy and then calling pack() on the result, giving that.
 
@@ -307,6 +325,7 @@ class SearchStrategy(object):
         )
 
     def flatmap(self, expand):
+        # type: (Callable[[Ex], SearchStrategy[T]]) -> SearchStrategy[T]
         """Returns a new strategy that generates values by generating a value
         from this strategy, say x, then generating a value from
         strategy(expand(x))
@@ -319,6 +338,7 @@ class SearchStrategy(object):
         )
 
     def filter(self, condition):
+        # type: (Callable[[Ex], bool]) -> SearchStrategy[Ex]
         """Returns a new strategy that generates values from this strategy
         which satisfy the provided condition. Note that if the condition is too
         hard to satisfy this might result in your tests failing with
@@ -333,6 +353,7 @@ class SearchStrategy(object):
 
     @property
     def branches(self):
+        # type: () -> List[SearchStrategy[Ex]]
         return [self]
 
     def __or__(self, other):
@@ -346,6 +367,7 @@ class SearchStrategy(object):
         return one_of_strategies((self, other))
 
     def validate(self):
+        # type: () -> None
         """Throw an exception if the strategy is not valid.
 
         This can happen due to lazy construction
@@ -361,7 +383,7 @@ class SearchStrategy(object):
             self.validate_called = False
             raise
 
-    LABELS = {}
+    LABELS = {}  # type: dict
 
     @property
     def class_label(self):
@@ -390,6 +412,7 @@ class SearchStrategy(object):
         pass
 
     def do_draw(self, data):
+        # type: (ConjectureData) -> Ex
         raise NotImplementedError('%s.do_draw' % (type(self).__name__,))
 
     def __init__(self):
@@ -430,7 +453,6 @@ class OneOfStrategy(SearchStrategy):
 
     @property
     def element_strategies(self):
-        from hypothesis.strategies import check_strategy
         if self.__element_strategies is None:
             strategies = []
             for arg in self.original_strategies:
@@ -467,6 +489,7 @@ class OneOfStrategy(SearchStrategy):
         ])
 
     def do_draw(self, data):
+        # type: (ConjectureData) -> Ex
         n = len(self.element_strategies)
         assert n > 0
         if n == 1:
@@ -529,13 +552,14 @@ class MappedSearchStrategy(SearchStrategy):
     def do_validate(self):
         self.mapped_strategy.validate()
 
-    def pack(self, x):
+    def pack(self, x):  # type: ignore
         """Take a value produced by the underlying mapped_strategy and turn it
         into a value suitable for outputting from this strategy."""
         raise NotImplementedError(
             '%s.pack()' % (self.__class__.__name__))
 
     def do_draw(self, data):
+        # type: (ConjectureData) -> Ex
         for _ in range(3):
             i = data.index
             try:
@@ -547,10 +571,11 @@ class MappedSearchStrategy(SearchStrategy):
                 data.stop_example(discard=True)
                 if data.index == i:
                     raise
-        reject()
+        raise UnsatisfiedAssumption()
 
     @property
     def branches(self):
+        # type: () -> List[SearchStrategy[Ex]]
         return [
             MappedSearchStrategy(pack=self.pack, strategy=strategy)
             for strategy in self.mapped_strategy.branches
@@ -582,6 +607,7 @@ class FilteredStrategy(SearchStrategy):
         self.filtered_strategy.validate()
 
     def do_draw(self, data):
+        # type: (ConjectureData) -> Ex
         for i in hrange(3):
             start_index = data.index
             value = data.draw(self.filtered_strategy)
@@ -599,10 +625,17 @@ class FilteredStrategy(SearchStrategy):
             self,
         ))
         data.mark_invalid()
+        raise AssertionError('Unreachable, for Mypy')  # pragma: no cover
 
     @property
     def branches(self):
+        # type: () -> List[SearchStrategy[Ex]]
         return [
             FilteredStrategy(strategy=strategy, condition=self.condition)
             for strategy in self.filtered_strategy.branches
         ]
+
+
+@check_function
+def check_strategy(arg, name=''):
+    check_type(SearchStrategy, arg, name)

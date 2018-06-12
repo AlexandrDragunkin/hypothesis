@@ -26,6 +26,7 @@ import sys
 import time
 import zlib
 import base64
+import random as rnd_module
 import inspect
 import warnings
 import traceback
@@ -39,12 +40,12 @@ from coverage.files import canonical_filename
 from coverage.collector import Collector
 
 import hypothesis.strategies as st
-from hypothesis import __version__
 from hypothesis.errors import Flaky, Timeout, NoSuchExample, \
     Unsatisfiable, DidNotReproduce, InvalidArgument, DeadlineExceeded, \
     MultipleFailures, FailedHealthCheck, HypothesisWarning, \
     UnsatisfiedAssumption, HypothesisDeprecationWarning
 from hypothesis.control import BuildContext
+from hypothesis.version import __version__
 from hypothesis._settings import Phase, Verbosity, HealthCheck, \
     PrintSettings
 from hypothesis._settings import settings as Settings
@@ -74,14 +75,17 @@ try:
 except ImportError:  # pragma: no cover
     from coverage.collector import FileDisposition
 
+if False:
+    from typing import Any, Dict, Callable, Optional, Union  # noqa
+    from hypothesis.utils.conventions import InferType  # noqa
+
 
 running_under_pytest = False
 global_force_seed = None
 
 
 def new_random():
-    import random
-    return random.Random(random.getrandbits(128))
+    return rnd_module.Random(rnd_module.getrandbits(128))
 
 
 @attr.s()
@@ -304,8 +308,7 @@ def get_random_for_wrapped_test(test, wrapped_test):
     elif global_force_seed is not None:
         return Random(global_force_seed)
     else:
-        import random
-        seed = random.getrandbits(128)
+        seed = rnd_module.getrandbits(128)
         wrapped_test._hypothesis_internal_use_generated_seed = seed
         return Random(seed)
 
@@ -424,7 +427,7 @@ class Arc(object):
         self.target = target
 
 
-ARC_CACHE = {}
+ARC_CACHE = {}  # type: Dict[str, Dict[Any, Dict[Any, Arc]]]
 
 
 def arc(filename, source, target):
@@ -551,7 +554,6 @@ class StateForActualGivenExecution(object):
                 data.can_reproduce_example_from_repr = True
             with self.settings:
                 with BuildContext(data, is_final=is_final):
-                    import random as rnd_module
                     rnd_module.seed(0)
                     args, kwargs = data.draw(self.search_strategy)
                     if expected_failure is not None:
@@ -889,7 +891,11 @@ def fake_subTest(self, msg=None, **__):
     yield
 
 
-def given(*given_arguments, **given_kwargs):
+def given(
+    *given_arguments,  # type: Union[SearchStrategy, InferType]
+    **given_kwargs  # type: Union[SearchStrategy, InferType]
+):
+    # type: (...) -> Callable[[Callable[..., None]], Callable[..., None]]
     """A decorator for turning a test function that accepts arguments into a
     randomized test.
 
@@ -1075,7 +1081,14 @@ def given(*given_arguments, **given_kwargs):
     return run_test_with_generator
 
 
-def find(specifier, condition, settings=None, random=None, database_key=None):
+def find(
+    specifier,  # type: SearchStrategy
+    condition,  # type: Callable[[Any], bool]
+    settings=None,  # type: Settings
+    random=None,   # type: Any
+    database_key=None,  # type: bytes
+):
+    # type: (...) -> Any
     """Returns the minimal example from the given strategy ``specifier`` that
     matches the predicate function ``condition``."""
     settings = settings or Settings(

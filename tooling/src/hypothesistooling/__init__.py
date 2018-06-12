@@ -44,9 +44,12 @@ ROOT = subprocess.check_output([
 ]).decode('ascii').strip()
 
 HYPOTHESIS_PYTHON = os.path.join(ROOT, 'hypothesis-python')
+HYPOTHESIS_RUBY = os.path.join(ROOT, 'hypothesis-ruby')
 
 PYTHON_SRC = os.path.join(HYPOTHESIS_PYTHON, 'src')
 PYTHON_TESTS = os.path.join(HYPOTHESIS_PYTHON, 'tests')
+
+REPO_TESTS = os.path.join(ROOT, 'whole-repo-tests')
 
 PYUP_FILE = os.path.join(ROOT, '.pyup.yml')
 
@@ -66,28 +69,25 @@ assert __version__ is not None
 assert __version_info__ is not None
 
 
+PYTHON_TAG_PREFIX = 'hypothesis-python-'
+
+
 def latest_version():
     versions = []
 
     for t in tags():
-        # All versions get tags but not all tags are versions (and there are
-        # a large number of historic tags with a different format for versions)
-        # so we parse each tag as a triple of ints (MAJOR, MINOR, PATCH)
-        # and skip any tag that doesn't match that.
+        if t.startswith(PYTHON_TAG_PREFIX):
+            t = t[len(PYTHON_TAG_PREFIX):]
+        else:
+            continue
         assert t == t.strip()
         parts = t.split('.')
-        if len(parts) != 3:
-            continue
-        try:
-            v = tuple(map(int, parts))
-        except ValueError:
-            continue
-
+        assert len(parts) == 3
+        v = tuple(map(int, parts))
         versions.append((v, t))
 
     _, latest = max(versions)
 
-    assert latest in tags()
     return latest
 
 
@@ -119,19 +119,19 @@ def merge_base(a, b):
     ]).strip()
 
 
-def has_source_changes(version=None):
-    if version is None:
-        version = latest_version()
+def point_of_divergence():
+    return merge_base('HEAD', 'origin/master')
 
-    # Check where we branched off from the version. We're only interested
-    # in whether *we* introduced any source changes, so we check diff from
-    # there rather than the diff to the other side.
-    point_of_divergence = merge_base('HEAD', version)
 
+def has_changes(files):
     return subprocess.call([
-        'git', 'diff', '--no-patch', '--exit-code', point_of_divergence,
-        'HEAD', '--', PYTHON_SRC,
+        'git', 'diff', '--no-patch', '--exit-code', point_of_divergence(),
+        'HEAD', '--', *files,
     ]) != 0
+
+
+def has_python_source_changes():
+    return has_changes([PYTHON_SRC])
 
 
 def has_uncommitted_changes(filename):
@@ -153,7 +153,7 @@ def create_tag_and_push():
         'remote', 'add', 'ssh-origin',
         'git@github.com:HypothesisWorks/hypothesis.git'
     )
-    git('tag', __version__)
+    git('tag', PYTHON_TAG_PREFIX + __version__)
 
     subprocess.check_call([
         'ssh-agent', 'sh', '-c',
@@ -195,7 +195,7 @@ def modified_files():
     files = set()
     for command in [
         ['git', 'diff', '--name-only', '--diff-filter=d',
-            latest_version(), 'HEAD'],
+            point_of_divergence(), 'HEAD'],
         ['git', 'diff', '--name-only']
     ]:
         diff_output = subprocess.check_output(command).decode('ascii')
@@ -344,26 +344,6 @@ def update_for_pending_release():
     )
 
 
-def could_affect_tests(path):
-    """Does this file have any effect on test results?"""
-    # RST files are the input to some tests -- in particular, the
-    # documentation build and doctests.  Both of those jobs are always run,
-    # so we can ignore their effect here.
-    #
-    # IPython notebooks aren't currently used in any tests.
-    if path.endswith(('.rst', '.ipynb')):
-        return False
-
-    # These files exist but have no effect on tests.
-    if path in ('CITATION', 'LICENSE.txt', ):
-        return False
-
-    # We default to marking a file "interesting" unless we know otherwise --
-    # it's better to run tests that could have been skipped than skip tests
-    # when they needed to be run.
-    return True
-
-
 def changed_files_from_master():
     """Returns a list of files which have changed between a branch and
     master."""
@@ -377,59 +357,21 @@ def changed_files_from_master():
     return files
 
 
-def should_run_ci_task(task):
-    """Given a task name, should we run this task?"""
-    if not IS_PULL_REQUEST:
-        print('We only skip tests if the job is a pull request.')
-        return True
-
-    # These tests are usually fast; we always run them rather than trying
-    # to keep up-to-date rules of exactly which changed files mean they
-    # should run.
-    if task in [
-        'check-pyup-yml',
-        'check-release-file',
-        'check-shellcheck',
-        'documentation',
-        'lint',
-    ]:
-        print('We always run the %s task.' % task)
-        return True
-
-    # The remaining tasks are all some sort of test of Hypothesis
-    # functionality.  Since it's better to run tests when we don't need to
-    # than skip tests when it was important, we remove any files which we
-    # know are safe to ignore, and run tests if there's anything left.
-    changed_files = changed_files_from_master()
-
-    interesting_changed_files = [
-        f for f in changed_files if could_affect_tests(f)
-    ]
-
-    if interesting_changed_files:
-        print(
-            'Changes to the following files mean we need to run tests: %s' %
-            ', '.join(interesting_changed_files)
-        )
-        return True
-    else:
-        print('There are no changes which would need a test run.')
-        return False
-
-
 SECRETS_BASE = os.path.join(ROOT, 'secrets')
 SECRETS_TAR = SECRETS_BASE + '.tar'
 ENCRYPTED_SECRETS = SECRETS_TAR + '.enc'
 
-DEPLOY_KEY = os.path.join(ROOT, 'deploy_key')
-PYPIRC = os.path.join(ROOT, '.pypirc')
+SECRETS = os.path.join(ROOT, 'secrets')
+
+DEPLOY_KEY = os.path.join(SECRETS, 'deploy_key')
+PYPIRC = os.path.join(SECRETS, '.pypirc')
 
 
 def decrypt_secrets():
     subprocess.check_call([
         'openssl', 'aes-256-cbc',
-        '-K', os.environ['encrypted_39cb4cc39a80_key'],
-        '-iv', os.environ['encrypted_39cb4cc39a80_iv'],
+        '-K', os.environ['encrypted_b8618e5d043b_key'],
+        '-iv', os.environ['encrypted_b8618e5d043b_iv'],
         '-in', ENCRYPTED_SECRETS,
         '-out', SECRETS_TAR,
         '-d'

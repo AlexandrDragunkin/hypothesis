@@ -55,6 +55,7 @@ assert __version__ is not None
 extras = {
     'datetime': ['pytz'],
     'pytz': ['pytz'],
+    'dateutil': ['python-dateutil'],
     'fakefactory': ['Faker>=0.7'],
     'numpy': ['numpy>=1.9.0'],
     'pytest': ['pytest>=2.8.0'],
@@ -85,6 +86,7 @@ setuptools.setup(
     author_email='david@drmaciver.com',
     packages=setuptools.find_packages(SOURCE),
     package_dir={'': SOURCE},
+    # package_data={'': ['py.typed']},  # un-comment to release type hints
     url=(
         'https://github.com/HypothesisWorks/hypothesis/'
         'tree/master/hypothesis-python'

@@ -21,6 +21,72 @@ Hypothesis APIs come in three flavours:
 You should generally assume that an API is internal unless you have specific
 information to the contrary.
 
+.. _v3.57.0:
+
+-------------------
+3.57.0 - 2018-05-20
+-------------------
+
+Using an unordered collection with the :func:`~hypothesis.strategies.permutations`
+strategy has been deprecated because the order in which e.g. a set shrinks is
+arbitrary. This may cause different results between runs.
+
+.. _v3.56.10:
+
+--------------------
+3.56.10 - 2018-05-16
+--------------------
+
+This release makes :obj:`~hypothesis.settings.define_setting`
+a private method, which has the effect of hiding it from the
+documentation.
+
+.. _v3.56.9:
+
+-------------------
+3.56.9 - 2018-05-11
+-------------------
+
+This is another release with no functionality changes as part of changes to
+Hypothesis's new release tagging scheme.
+
+.. _v3.56.8:
+
+-------------------
+3.56.8 - 2018-05-10
+-------------------
+
+This is a release with no functionality changes that moves Hypothesis over to
+a new release tagging scheme.
+
+.. _v3.56.7:
+
+-------------------
+3.56.7 - 2018-05-10
+-------------------
+
+This release provides a performance improvement for most tests, but in
+particular users of ``sampled_from`` who don't have numpy installed should see
+a significant performance improvement.
+
+.. _v3.56.6:
+
+-------------------
+3.56.6 - 2018-05-09
+-------------------
+
+This patch contains further internal work to support Mypy.
+There are no user-visible changes... yet.
+
+.. _v3.56.5:
+
+-------------------
+3.56.5 - 2018-04-22
+-------------------
+
+This patch contains some internal refactoring to run :pypi:`mypy` in CI.
+There are no user-visible changes.
+
 .. _v3.56.4:
 
 -------------------

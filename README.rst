@@ -3,7 +3,7 @@ Hypothesis
 ==========
 
 Hypothesis is family of testing libraries which let you write tests parametrized
-by a source of examples. A Hypothesis implementation then generates simple an
+by a source of examples. A Hypothesis implementation then generates simple and
 comprehensible examples that make your tests fail.
 This simplifies writing your tests and makes them more powerful at the same time,
 by letting software automate the boring bits and do them to a higher standard than a human would,
@@ -20,7 +20,7 @@ The currently available implementations of Hypothesis are:
 
 * `Hypothesis for Python <hypothesis-python>`_ is the original implementation,
   and the only one that is currently fully production ready.
-* `Hypothesis for Ruby <https://github.com/HypothesisWorks/hypothesis-ruby>`_
+* `Hypothesis for Ruby <hypothesis-ruby>`_
   is an ongoing project that we intend to eventually reach parity with
   Hypothesis for Python.
 * `Hypothesis for Java <https://github.com/HypothesisWorks/hypothesis-java>`_

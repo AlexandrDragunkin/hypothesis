@@ -26,24 +26,39 @@ from glob import glob
 from time import time, sleep
 from datetime import datetime
 
-import yaml
-from pyup.config import Config
-
 import hypothesistooling as tools
 import hypothesistooling.installers as install
 from hypothesistooling import fix_doctests as fd
 from hypothesistooling.scripts import pip_tool
 
 TASKS = {}
+BUILD_FILES = tuple(os.path.join(tools.ROOT, f) for f in [
+    'tooling', '.travis.yml',
+])
 
 
-def task(fn):
-    name = fn.__name__.replace('_', '-')
-    TASKS[name] = fn
-    return fn
+def task(if_changed=()):
+    if isinstance(if_changed, str):
+        if_changed = (if_changed,)
+
+    def accept(fn):
+        def wrapped():
+            if if_changed and tools.IS_PULL_REQUEST:
+                if not tools.has_changes(if_changed + BUILD_FILES):
+                    print('Skipping task due to no changes in %s' % (
+                        ', '.join(if_changed),
+                    ))
+                    return
+            fn()
+        wrapped.__name__ = fn.__name__
+
+        name = fn.__name__.replace('_', '-')
+        TASKS[name] = wrapped
+        return wrapped
+    return accept
 
 
-@task
+@task()
 def lint():
     pip_tool(
         'flake8',
@@ -52,23 +67,16 @@ def lint():
     )
 
 
-@task
-def check_pyup_yml():
-    with open(tools.PYUP_FILE, 'r') as i:
-        data = yaml.safe_load(i.read())
-    config = Config()
-    config.update_config(data)
-
-    if not config.is_valid_schedule():
-        print('Schedule %r is invalid' % (config.schedule,))
-        sys.exit(1)
+@task(if_changed=tools.PYTHON_SRC)
+def check_type_hints():
+    pip_tool('mypy', tools.PYTHON_SRC)
 
 
 DIST = os.path.join(tools.HYPOTHESIS_PYTHON, 'dist')
 PENDING_STATUS = ('started', 'created')
 
 
-@task
+@task()
 def deploy():
     os.chdir(tools.HYPOTHESIS_PYTHON)
 
@@ -184,46 +192,6 @@ def deploy():
     sys.exit(0)
 
 
-@task
-def check_release_file():
-    if tools.has_source_changes():
-        if not tools.has_release():
-            print(
-                'There are source changes but no RELEASE.rst. Please create '
-                'one to describe your changes.'
-            )
-            sys.exit(1)
-        tools.parse_release_file()
-
-
-@task
-def check_shellcheck():
-    install.ensure_shellcheck()
-    subprocess.check_call([install.SHELLCHECK] + [
-        f for f in tools.all_files()
-        if f.endswith('.sh')
-    ])
-
-
-@task
-def check_rst():
-    rst = glob('*.rst') + glob('guides/*.rst')
-    docs = glob('hypothesis-python/docs/*.rst')
-
-    pip_tool('rst-lint', *rst)
-    pip_tool('flake8', '--select=W191,W291,W292,W293,W391', *(rst + docs))
-
-
-@task
-def check_secrets():
-    if os.environ.get('TRAVIS_SECURE_ENV_VARS', None) != 'true':
-        sys.exit(0)
-
-    tools.decrypt_secrets()
-
-    assert os.path.exists(tools.DEPLOY_KEY)
-
-
 CURRENT_YEAR = datetime.utcnow().year
 
 
@@ -248,7 +216,7 @@ HEADER = """
 }
 
 
-@task
+@task()
 def format():
     def should_format_file(path):
         if os.path.basename(path) in (
@@ -317,7 +285,7 @@ VALID_STARTS = (
 )
 
 
-@task
+@task()
 def check_format():
     format()
     n = max(map(len, VALID_STARTS))
@@ -340,12 +308,12 @@ def check_not_changed():
     subprocess.check_call(['git', 'diff', '--exit-code'])
 
 
-@task
+@task()
 def fix_doctests():
     fd.main()
 
 
-@task
+@task()
 def compile_requirements(upgrade=False):
     if upgrade:
         extra = ['--upgrade']
@@ -359,12 +327,12 @@ def compile_requirements(upgrade=False):
         pip_tool('pip-compile', *extra, f, '--output-file', base + '.txt')
 
 
-@task
+@task()
 def upgrade_requirements():
     compile_requirements(upgrade=True)
 
 
-@task
+@task()
 def check_requirements():
     compile_requirements()
     check_not_changed()
@@ -382,7 +350,7 @@ def update_changelog_for_docs():
     tools.update_changelog_and_version()
 
 
-@task
+@task(if_changed=tools.HYPOTHESIS_PYTHON)
 def documentation():
     os.chdir(tools.HYPOTHESIS_PYTHON)
     try:
@@ -397,7 +365,7 @@ def documentation():
         ])
 
 
-@task
+@task(if_changed=tools.HYPOTHESIS_PYTHON)
 def doctest():
     os.chdir(tools.HYPOTHESIS_PYTHON)
     env = dict(os.environ)
@@ -437,7 +405,7 @@ PY36 = '3.6.5'
 PYPY2 = 'pypy2.7-5.10.0'
 
 
-@task
+@task()
 def install_core():
     install.python_executable(PY27)
     install.python_executable(PY36)
@@ -452,43 +420,46 @@ for n in [PY27, PY34, PY35, PY36]:
     ALIASES[n] = 'python%s.%s' % (major, minor)
 
 
-@task
+python_tests = task(if_changed=(tools.PYTHON_SRC, tools.PYTHON_TESTS))
+
+
+@python_tests
 def check_py27():
     run_tox('py27-full', PY27)
 
 
-@task
+@python_tests
 def check_py34():
     run_tox('py34-full', PY34)
 
 
-@task
+@python_tests
 def check_py35():
     run_tox('py35-full', PY35)
 
 
-@task
+@python_tests
 def check_py36():
     run_tox('py36-full', PY36)
 
 
-@task
+@python_tests
 def check_pypy():
     run_tox('pypy-full', PYPY2)
 
 
-@task
+@python_tests
 def check_py27_typing():
     run_tox('py27typing', PY27)
 
 
-@task
+@python_tests
 def check_pypy_with_tracer():
     run_tox('pypy-with-tracer', PYPY2)
 
 
 def standard_tox_task(name):
-    TASKS['check-' + name] = lambda: run_tox(name, PY36)
+    TASKS['check-' + name] = python_tests(lambda: run_tox(name, PY36))
 
 
 standard_tox_task('nose')
@@ -501,25 +472,76 @@ standard_tox_task('django111')
 for n in [19, 20, 21, 22, 23]:
     standard_tox_task('pandas%d' % (n,))
 
-standard_tox_task('examples3')
 standard_tox_task('coverage')
 standard_tox_task('pure-tracer')
 
 
-@task
+@task()
 def check_quality():
     run_tox('quality', PY36)
     run_tox('quality2', PY27)
 
 
-@task
+examples_task = task(if_changed=(tools.PYTHON_SRC, os.path.join(
+    tools.HYPOTHESIS_PYTHON, 'examples')
+))
+
+
+@examples_task
 def check_examples2():
     run_tox('examples2', PY27)
 
 
-@task
+@examples_task
+def check_examples3():
+    run_tox('examples2', PY36)
+
+
+@python_tests
 def check_unicode():
     run_tox('unicode', PY27)
+
+
+@task()
+def check_whole_repo_tests():
+    install.ensure_shellcheck()
+    subprocess.check_call([
+        sys.executable, '-m', 'pytest', tools.REPO_TESTS
+    ])
+
+
+@task()
+def shell():
+    import IPython
+    IPython.start_ipython([])
+
+
+def bundle(*args):
+    subprocess.check_call([
+        install.BUNDLER_EXECUTABLE, *args
+    ])
+
+
+def ruby_task(fn):
+    def run():
+        install.ensure_rustup()
+        install.ensure_ruby()
+        os.chdir(tools.HYPOTHESIS_RUBY)
+        # Install in deployment mode so that it gets cached on Travis.
+        bundle('install', '--deployment')
+        fn()
+    run.__name__ = fn.__name__
+    return task(if_changed=(tools.HYPOTHESIS_RUBY,))(run)
+
+
+@ruby_task
+def lint_ruby():
+    bundle('exec', 'rake', 'checkformat')
+
+
+@ruby_task
+def check_ruby_tests():
+    bundle('exec', 'rake', 'test')
 
 
 if __name__ == '__main__':
@@ -533,8 +555,6 @@ if __name__ == '__main__':
     task_to_run = os.environ.get('TASK')
     if task_to_run is None:
         task_to_run = sys.argv[1]
-    if not tools.should_run_ci_task(task_to_run):
-        sys.exit(0)
     try:
         TASKS[task_to_run]()
     except subprocess.CalledProcessError as e:

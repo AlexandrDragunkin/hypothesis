@@ -73,7 +73,7 @@ intersphinx_mapping = {
     'django': ('https://django.readthedocs.io/en/stable/', None),
 }
 
-autodoc_mock_imports = ['numpy', 'pandas']
+autodoc_mock_imports = ['pandas']
 
 doctest_global_setup = '''
 # Some standard imports
@@ -99,7 +99,7 @@ extlinks = {
     'gh-file': (_repo + 'blob/master/%s', ''),
     'gh-link': (_repo + '%s', ''),
     'issue': (_repo + 'issues/%s', 'issue #'),
-    'pull': (_repo + 'pulls/%s', 'pull request #'),
+    'pull': (_repo + 'pull/%s', 'pull request #'),
     'pypi': ('https://pypi.org/project/%s', ''),
 }
 
